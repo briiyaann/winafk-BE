@@ -27,23 +27,29 @@ class GameTypesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function index()
     {
-        return $this->gameType->index();
+        $game_types = $this->gameType->index();
+        return $this->common->returnSuccessWithData($game_types);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return array
+     * @return array|\Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
+        if(!$this->common->hasPermission('permissions.game_type.create')) {
+            return response()->json('Unauthorized', 401);
+        }
+
         $rules = [
             'name' => 'required',
+            'banner' => 'required|mimes:jpg,jpeg,gif,png'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -56,9 +62,18 @@ class GameTypesController extends Controller
 
             return $this->common->returnWithErrors($return_err);
         } else {
+            $path = '';
+            if($request->file('banner')) {
+                $upload_folder = 'game_types';
+                $image = $request->file('banner');
+                $path = $image->store($upload_folder, 'public');
+
+            }
+
             $data = [
                 'name' => $request->get('name'),
-                'description' => $request->get('description')
+                'description' => $request->get('description'),
+                'banner' => $path
             ];
 
             $type = $this->gameType->store($data);

@@ -3,13 +3,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\UserSerivces;
 use Validator;
+use Illuminate\Support\Facades\Auth;
 
 class CommonController
 {
+    public $user;
 
     public function __construct(
+        UserSerivces $user
     ){
+        $this->user = $user;
     }
 
     /**
@@ -85,5 +90,16 @@ class CommonController
 
             return [];
         }
+    }
+
+    public function hasPermission($method)
+    {
+        $permission = config($method);
+
+        if(!$permission) return true;
+
+        $user_role = Auth::user()->user_role;
+
+        return in_array($user_role, $permission) ? true : false;
     }
 }

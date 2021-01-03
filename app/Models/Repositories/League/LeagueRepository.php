@@ -21,7 +21,7 @@ class LeagueRepository implements LeagueRepositoryInterface
 
     public function getLeagueswithTeam()
     {
-        return League::with('leagueTeam')->paginate();
+        return League::with('leagueTeam')->with('leagueGameType')->get();
     }
 
     public function getLeaguewithTeam($id)

@@ -37,5 +37,13 @@ Route::group(['prefix' => 'v1'], function() {
        Route::apiResource('game-types', 'Api\GameTypesController');
 
        Route::apiResource('leagues', 'Api\LeagueController');
+
+       Route::apiResource('matches', 'Api\MatchesController');
+
+       Route::apiResource('sub-matches', 'Api\SubMatchesController');
+
+        Route::get('logout', 'Api\UsersController@logout');
     });
+
+
 });

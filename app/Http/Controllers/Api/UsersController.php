@@ -86,27 +86,31 @@ class UsersController extends Controller
         $code = $request->get('code');
 
         if(!$code) {
-            return $this->common->createErrorMsg('no_code', 'Error code not found');
+            return $this->common->createErrorMsg('code_error', 'Error code not found');
         } else {
             $user = $this->user->getUserByCode($code);
-            $verification_timestamp = $user->verification_created;
+            if($user) {
+                $verification_timestamp = $user->verification_created;
 
-            $is_expired = Carbon::now()->diff(Carbon::parse($verification_timestamp));
+                $is_expired = Carbon::now()->diff(Carbon::parse($verification_timestamp));
 
-            if($is_expired->days == 0) {
-                $update_user = [
-                    'verification_code' => null,
-                    'verification_created' => null,
-                    'email_verified_at' => Carbon::now()
-                ];
+                if($is_expired->days == 0) {
+                    $update_user = [
+                        'verification_code' => null,
+                        'verification_created' => null,
+                        'email_verified_at' => Carbon::now()
+                    ];
 
-                $this->user->updateUser($user->id, $update_user);
+                    $this->user->updateUser($user->id, $update_user);
 
-                return $this->common->returnSuccess('200');
+                    return $this->common->returnSuccess('200');
+                } else {
+                    $this->user->hardDeleteUser($user->id);
+
+                    return $this->common->createErrorMsg('code_error', 'Verification link expired.');
+                }
             } else {
-                $this->user->hardDeleteUser($user->id);
-
-                return $this->common->createErrorMsg('expired', 'Verification link expired.');
+                return $this->common->createErrorMsg('code_error', 'Invalid Error Code.');
             }
         }
 
@@ -147,7 +151,7 @@ class UsersController extends Controller
     public function passwordReset(Request $request)
     {
         $rules = [
-            'email' => 'required',
+            'token' => 'required',
             'password' => 'required|confirmed'
         ];
 
@@ -161,15 +165,19 @@ class UsersController extends Controller
 
             return $this->common->returnWithErrors($return_err);
         } else {
-            $user = $this->user->getUserByEmail($request->get('email'));
-            if($user){
+            $password_reset =  $this->user->getPasswordReset($request->get('token'));
+
+            if($password_reset){
+                $user = $this->user->getUserByEmail($password_reset->email);
+
                 $new_password = bcrypt($request->get('password'));
 
                 $update = $this->user->updateUser($user->id, ['password' => $new_password]);
-
+                //remove item from reset password
+                $this->user->deletePasswordReset($user->email);
                 return $this->common->returnSuccess();
             } else {
-                return $this->common->createErrorMsg('email_not_found', 'Email not found');
+                return $this->common->createErrorMsg('reset_error', 'Token not found');
             }
         }
     }
@@ -245,6 +253,14 @@ class UsersController extends Controller
             } else {
                 return $this->common->createErrorMsg('email_not_found', 'Email not found');
             }
+        }
+    }
+
+    public function logout()
+    {
+        if(Auth::check()) {
+            Auth::user()->token()->revoke();
+            return $this->common->returnSuccess();
         }
     }
 }

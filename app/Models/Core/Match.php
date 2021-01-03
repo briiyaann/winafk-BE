@@ -18,4 +18,9 @@ class Match extends Model
         return $this->hasMany('App\Models\Core\MatchSubmatch');
     }
 
+    public function matchTeams()
+    {
+        return $this->hasMany('App\Models\Core\MatchTeam');
+    }
+
 }

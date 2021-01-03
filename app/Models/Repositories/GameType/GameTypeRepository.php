@@ -10,7 +10,7 @@ class GameTypeRepository implements GameTypeRepositoryInterface
 {
     public function index()
     {
-        return GameType::paginate(10);
+        return GameType::all();
     }
 
     public function store($data)

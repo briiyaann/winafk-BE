@@ -9,10 +9,15 @@ class GameType extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name', 'description', 'banner'];
 
     public function teams()
     {
         return $this->hasMany('App\Models\Core\Team');
+    }
+
+    public function league()
+    {
+        return $this->belongsTo('App\Models\Core\League', 'game_type_id');
     }
 }

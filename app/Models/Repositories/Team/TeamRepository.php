@@ -10,7 +10,7 @@ class TeamRepository implements TeamRepositoryInterface
 {
     public function getTeamsPaginate()
     {
-        return Team::with('gameType')->paginate(10);
+        return Team::with('gameType')->get();
     }
 
     public function store($data)

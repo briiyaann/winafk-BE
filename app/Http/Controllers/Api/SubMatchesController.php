@@ -6,6 +6,7 @@ use App\Http\Controllers\CommonController;
 use App\Http\Controllers\Controller;
 use App\Services\SubMatchServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SubMatchesController extends Controller
 {
@@ -43,7 +44,6 @@ class SubMatchesController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'best_of_id'=> 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -57,6 +57,10 @@ class SubMatchesController extends Controller
             return $this->common->returnWithErrors($return_err);
         } else {
             $data = $request->only(['name', 'best_of_id', 'points']);
+
+            $data['best_of_id'] = isset($data['best_of_id']) ? $data['best_of_id'] : 0;
+
+            $data['points'] = isset($data['points']) ? $data['points'] : 0;
 
             $add = $this->sub_match->store($data);
 

@@ -2,20 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7b8b93e7-ef8c-4732-8c50-a2be33372566" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Models/Repositories/League/LeagueRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/Repositories/League/LeagueRepositoryInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/Repositories/Match/MatchRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/Repositories/Match/MatchRepositoryInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/Repositories/SubMatch/SubMatchRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/Repositories/SubMatch/SubMatchRepositoryInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Services/LeagueServices.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Services/SubMatchServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Services/MatchServices.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/permissions.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/database.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/database.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2020_11_23_190109_create_game_types_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_11_23_190109_create_game_types_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeds/DatabaseSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/DatabaseSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/GameTypesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/GameTypesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/LeagueController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/LeagueController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/MatchesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/MatchesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/SubMatchesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/SubMatchesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/TeamsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/TeamsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/UsersController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/UsersController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/CommonController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/CommonController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Core/GameType.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Core/GameType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Core/League.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Core/League.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Core/Match.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Core/Match.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Repositories/GameType/GameTypeRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Repositories/GameType/GameTypeRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Repositories/League/LeagueRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Repositories/League/LeagueRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Repositories/Team/TeamRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Repositories/Team/TeamRepository.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -225,7 +227,23 @@
       <workItem from="1607748176847" duration="19010000" />
       <workItem from="1607859240438" duration="2075000" />
       <workItem from="1607874530626" duration="127000" />
-      <workItem from="1608005558062" duration="1242000" />
+      <workItem from="1608005558062" duration="2019000" />
+      <workItem from="1608118513868" duration="4880000" />
+      <workItem from="1608134727969" duration="4773000" />
+      <workItem from="1608618440067" duration="1399000" />
+      <workItem from="1608650422622" duration="59000" />
+      <workItem from="1608657477892" duration="225000" />
+      <workItem from="1608697114255" duration="649000" />
+      <workItem from="1608700840410" duration="9723000" />
+      <workItem from="1608744701440" duration="2435000" />
+      <workItem from="1608884636609" duration="3740000" />
+      <workItem from="1608902318893" duration="920000" />
+      <workItem from="1608911970387" duration="458000" />
+      <workItem from="1608999546694" duration="2355000" />
+      <workItem from="1609005938641" duration="1448000" />
+      <workItem from="1609070005375" duration="58000" />
+      <workItem from="1609092262427" duration="1005000" />
+      <workItem from="1609185222045" duration="2365000" />
     </task>
     <servers />
   </component>
@@ -261,14 +279,14 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state width="1877" height="295" key="GridCell.Tab.0.right/0.0.1920.1080@0.0.1920.1080" timestamp="1605358258312" />
-    <state x="769" y="355" key="NewPhpClassDialog" timestamp="1607780878366">
+    <state x="769" y="355" key="NewPhpClassDialog" timestamp="1608135404342">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="769" y="355" key="NewPhpClassDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1607780878366" />
-    <state x="794" y="464" key="NewPhpFileDialog" timestamp="1605535337491">
+    <state x="769" y="355" key="NewPhpClassDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1608135404342" />
+    <state x="794" y="464" key="NewPhpFileDialog" timestamp="1608885997352">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="794" y="464" key="NewPhpFileDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1605535337490" />
+    <state x="794" y="464" key="NewPhpFileDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1608885997352" />
     <state x="461" y="183" key="SettingsEditor" timestamp="1608008686199">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>

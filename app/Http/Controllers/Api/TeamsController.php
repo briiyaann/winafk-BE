@@ -49,7 +49,6 @@ class TeamsController extends Controller
             'shortname' => 'required',
             'game_type_id' => 'required',
             'banner' => 'mimes:jpg,jpeg,gif,png',
-            'logo' => 'required|mimes:jpg,jpeg,gif,png'
         ];
 
         $validator = Validator::make($request->all(), $rules);

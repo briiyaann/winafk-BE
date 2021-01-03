@@ -2,11 +2,27 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\CommonController;
 use App\Http\Controllers\Controller;
+use App\Services\MatchServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 
 class MatchesController extends Controller
 {
+    public $common;
+
+    public $match;
+
+    public function __construct(
+        CommonController $common,
+        MatchServices $match
+    ){
+        $this->common = $common;
+        $this->match = $match;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +37,7 @@ class MatchesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function store(Request $request)
     {
@@ -29,12 +45,24 @@ class MatchesController extends Controller
             'name' => 'required',
             'game_type_id' => 'required',
             'league_id' => 'required',
-            'banner' => 'required',
             'schedule' => 'required',
             'label' => 'required',
             'fee' => 'required',
             'match_count' => 'required'
         ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            $return_err = [];
+            foreach ($validator->errors()->toArray() as $key => $value) {
+                $return_err[$key] = $value[0];
+            }
+
+            return $this->common->returnWithErrors($return_err);
+        } else {
+
+        }
     }
 
     /**

@@ -37,7 +37,7 @@ class LeagueController extends Controller
     {
         $leagues_team = $this->league->getLeagueswithTeam()->toArray();
 
-        foreach ($leagues_team['data'] as $key => $league_team){
+        foreach ($leagues_team as $key => $league_team){
             $teams = [];
 
             foreach ($league_team['league_team'] as $team) {
@@ -45,8 +45,8 @@ class LeagueController extends Controller
                 array_push($teams, $t);
             }
 
-            unset($leagues_team['data'][$key]['league_team']);
-            $leagues_team['data'][$key]['teams'] = $teams;
+            unset($leagues_team[$key]['league_team']);
+            $leagues_team[$key]['teams'] = $teams;
         }
 
         return $this->common->returnSuccessWithData($leagues_team);
@@ -65,7 +65,8 @@ class LeagueController extends Controller
             'fee' => 'required',
             'background' => 'required|mimes:jpg,jpeg,gif,png',
             'banner' => 'required|mimes:jpg,jpeg,gif,png',
-            'description' => 'required'
+            'description' => 'required',
+            'game_type_id' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -97,6 +98,7 @@ class LeagueController extends Controller
                     'fee' => intval($request->get('fee')),
                     'background' => $background_path,
                     'banner' => $banner_path,
+                    'game_type_id' => intval($request->get('game_type_id')),
                     'betting_status' => 1,
                     'is_active' => 1,
                     'description' => $request->get('description')
