@@ -99,7 +99,6 @@ class LeagueController extends Controller
                     'background' => $background_path,
                     'banner' => $banner_path,
                     'game_type_id' => intval($request->get('game_type_id')),
-                    'betting_status' => 1,
                     'is_active' => 1,
                     'description' => $request->get('description')
                 ];

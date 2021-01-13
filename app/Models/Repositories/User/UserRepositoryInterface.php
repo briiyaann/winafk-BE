@@ -23,4 +23,6 @@ interface UserRepositoryInterface
     public function getPasswordReset($token);
 
     public function deletePasswordReset($email);
+
+    public function findUser($id);
 }

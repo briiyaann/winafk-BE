@@ -52,4 +52,9 @@ class UserRepository implements UserRepositoryInterface
     {
         return PasswordReset::where('email', $email)->delete();
     }
+
+    public function findUser($id)
+    {
+        return User::find($id);
+    }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class League extends Model
 {
-    protected $fillable = ['name', 'fee', 'background', 'banner', 'game_type_id', 'betting_status', 'is_active', 'description'];
+    protected $fillable = ['name', 'fee', 'background', 'banner', 'game_type_id', 'is_active', 'description'];
 
     public function leagueTeam()
     {
@@ -16,5 +16,10 @@ class League extends Model
     public function leagueGameType()
     {
         return $this->hasOne('App\Models\Core\GameType', 'id');
+    }
+
+    public function matches()
+    {
+        return $this->hasMany('App\Models\Core\Match');
     }
 }

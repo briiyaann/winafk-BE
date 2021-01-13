@@ -16,4 +16,23 @@ class MatchServices
         $this->match = $match;
     }
 
+    public function store($data)
+    {
+        return $this->match->store($data);
+    }
+
+    public function getList($param)
+    {
+        return $this->match->getList($param);
+    }
+
+    public function addMatchTeam($data)
+    {
+        return $this->match->addMatchTeam($data);
+    }
+
+    public function addMatchSubMatch($data)
+    {
+        return $this->match->addMatchSubMatch($data);
+    }
 }

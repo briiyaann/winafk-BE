@@ -62,6 +62,7 @@ class UsersController extends Controller
                 'password' => bcrypt($request->get('password')),
                 'birthday' => Carbon::parse($request->get('birthday'))->format('Y-m-d H:i:s'),
                 'user_role' => 1,
+                'coins' => 0,
                 'verification_code' => Str::random(30),
                 'verification_created' => Carbon::now()
             ];

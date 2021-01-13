@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class MatchSubmatch extends Model
 {
+    protected $table = 'match_submatch';
+
     protected $fillable = ['match_id', 'sub_match_id', 'round'];
 
     public function matches()

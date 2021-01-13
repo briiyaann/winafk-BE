@@ -52,5 +52,15 @@ class AppServiceProvider extends ServiceProvider
             'App\Models\Repositories\SubMatch\SubMatchRepositoryInterface',
             'App\Models\Repositories\SubMatch\SubMatchRepository'
         );
+
+        $this->app->bind(
+            'App\Models\Repositories\Topup\TopupRepositoryInterface',
+            'App\Models\Repositories\Topup\TopupRepository'
+        );
+
+        $this->app->bind(
+            'App\Models\Repositories\Bet\BetRepositoryInterface',
+            'App\Models\Repositories\Bet\BetRepository'
+        );
     }
 }

@@ -15,11 +15,11 @@ class SubMatchRepository implements SubMatchRepositoryInterface
 
     public function show($id)
     {
-        return SubMatch::where('id', $id);
+        return SubMatch::where('id', $id)->first();
     }
 
     public function index()
     {
-        return SubMatch::paginate();
+        return SubMatch::all();
     }
 }

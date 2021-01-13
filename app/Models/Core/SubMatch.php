@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SubMatch extends Model
 {
-    protected $fillable = ['name', 'best_of_id', 'points'];
+    protected $fillable = ['name', 'round', 'points'];
 
     public function matches()
     {

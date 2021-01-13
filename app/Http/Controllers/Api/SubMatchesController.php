@@ -56,9 +56,9 @@ class SubMatchesController extends Controller
 
             return $this->common->returnWithErrors($return_err);
         } else {
-            $data = $request->only(['name', 'best_of_id', 'points']);
+            $data = $request->only(['name', 'round', 'points']);
 
-            $data['best_of_id'] = isset($data['best_of_id']) ? $data['best_of_id'] : 0;
+            $data['round'] = isset($data['round']) ? $data['round'] : 0;
 
             $data['points'] = isset($data['points']) ? $data['points'] : 0;
 

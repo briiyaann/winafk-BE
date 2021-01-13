@@ -42,7 +42,17 @@ Route::group(['prefix' => 'v1'], function() {
 
        Route::apiResource('sub-matches', 'Api\SubMatchesController');
 
-        Route::get('logout', 'Api\UsersController@logout');
+       Route::get('topups/user/{id}', 'Api\TopupsController@getList');
+
+       Route::get('topups/admin/{status}', 'Api\TopupsController@getAllByStatus');
+
+       Route::post('topups', 'Api\TopupsController@store');
+
+       Route::put('topups/{id}', 'Api\TopupsController@update');
+
+       Route::apiResource('bets', 'Api\BetsController');
+
+       Route::get('logout', 'Api\UsersController@logout');
     });
 
 

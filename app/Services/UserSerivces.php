@@ -59,4 +59,9 @@ class UserSerivces
         return $this->user->deletePasswordReset($email);
     }
 
+    public function findUser($id)
+    {
+        return $this->user->findUser($id);
+    }
+
 }
