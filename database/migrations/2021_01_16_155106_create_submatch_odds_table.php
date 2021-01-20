@@ -18,7 +18,7 @@ class CreateSubmatchOddsTable extends Migration
             $table->integer('sub_match_id');
             $table->integer('match_id');
             $table->integer('team_id');
-            $table->integer('bets')->default(0);
+            $table->decimal('bets', 11, 2)->default(0);
             $table->decimal('percentage', 5, 2);
             $table->decimal('odds', 5, 2);
             $table->timestamps();

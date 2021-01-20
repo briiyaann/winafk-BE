@@ -111,7 +111,7 @@ class BetsController extends Controller
 
                 $odd = $this->submatch->getSingleOdds($submatch['submatch'], $request->get('match_id'), $request->get('team_id'));
                 //increment bet
-                $this->submatch->updateOdds(['bets' => intval($odd->bets) + 1], $odd->id);
+                $this->submatch->updateOdds(['bets' => intval($odd->bets) + intval($submatch['amount'])], $odd->id);
 
                 if($save->id) {
                     $saved_count++;
