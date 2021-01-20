@@ -33,4 +33,9 @@ class MatchRepository implements MatchRepositoryInterface
     {
         return MatchSubmatch::create($data);
     }
+
+    public function getMatch($id)
+    {
+        return Match::where('id', $id)->first();
+    }
 }

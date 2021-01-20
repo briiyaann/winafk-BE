@@ -13,4 +13,8 @@ class SubMatch extends Model
         return $this->belongsTo('App\Models\Core\Match');
     }
 
+    public function odds()
+    {
+        return $this->hasmany('App\Models\Core\SubmatchOdd');
+    }
 }

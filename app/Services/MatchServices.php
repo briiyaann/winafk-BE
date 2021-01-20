@@ -35,4 +35,9 @@ class MatchServices
     {
         return $this->match->addMatchSubMatch($data);
     }
+
+    public function getMatch($id)
+    {
+        return $this->match->getMatch($id);
+    }
 }

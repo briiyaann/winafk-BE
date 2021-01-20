@@ -140,16 +140,39 @@ class MatchesController extends Controller
                         'round' => $submatch->round
                     ];
 
+                    //add odds per team
+                    $odds_data = [
+                        'sub_match_id' => $sub_match,
+                        'match_id' => $match->id,
+                        'bets' => 0,
+                        'percentage' => 0,
+                        'odds' => 0
+                    ];
+
+                    $this->addSubmatchOdds($odds_data, $teams);
+
                     $this->match->addMatchSubMatch($sub_data);
                 }
 
-                $new_match = $this->match->getList(0);
+                $new_match = $this->match->getMatch($match->id);
 
                 return $this->common->returnSuccessWithData($new_match);
             } else {
                 return $this->common->createErrorMsg('general', 'Something is Wrong.');
             }
         }
+    }
+
+    public function addSubmatchOdds($data, $teams)
+    {
+        foreach($teams as $team)
+        {
+            $data['team_id'] = $team;
+
+            $save = $this->submatch->addSubmatchOdds($data);
+        }
+
+        return true;
     }
 
     /**

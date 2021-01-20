@@ -13,4 +13,6 @@ interface MatchRepositoryInterface
     public function addMatchTeam($data);
 
     public function addMatchSubMatch($data);
+
+    public function getMatch($id);
 }
