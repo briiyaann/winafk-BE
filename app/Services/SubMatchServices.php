@@ -44,7 +44,8 @@ class SubMatchServices
     {
         $submatch_odds = $this->sub_match->getOddsByTeam($data['sub_match_id'], $data['match_id'])->toArray();
         $match = $this->match->getMatch($data['match_id']);
-        $match_fee = round(.1 - (intval($match->fee/100)), 2);
+        $match_fee = round(1 - $match->fee/100, 2);
+
         if(count($submatch_odds) == 2)
         {
             $total_bets = array_sum(array_map(function($data){
@@ -58,7 +59,7 @@ class SubMatchServices
             $team_b_id = $team_b['team_id'];
 
             $team_a_odds = intval($team_a['bets']) == 0 ? 0 : (round($team_b['bets']/$team_a['bets'], 2) * $match_fee) + 1;
-            $team_b_odds = intval(($team_b['bets']) == 0 ? 0 : round($team_a['bets']/$team_b['bets'], 2) * $match_fee) + 1;
+            $team_b_odds = intval($team_b['bets']) == 0 ? 0 : (round($team_a['bets']/$team_b['bets'], 2) * $match_fee) + 1;
 
             $team_a_percentage = round((intval($team_a['bets'])/$total_bets) * 100, 2);
             $team_b_percentage = round((intval($team_b['bets'])/$total_bets) * 100, 2);
