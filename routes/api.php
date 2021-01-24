@@ -34,11 +34,9 @@ Route::group(['prefix' => 'v1'], function() {
 
        Route::apiResource('teams', 'Api\TeamsController');
 
-       Route::apiResource('game-types', 'Api\GameTypesController');
-
        Route::apiResource('leagues', 'Api\LeagueController');
 
-       Route::apiResource('matches', 'Api\MatchesController');
+       Route::post('matches/{id}/start', 'Api\MatchesController@startMatch');
 
        Route::apiResource('sub-matches', 'Api\SubMatchesController');
 
@@ -55,5 +53,7 @@ Route::group(['prefix' => 'v1'], function() {
        Route::get('logout', 'Api\UsersController@logout');
     });
 
+    Route::apiResource('game-types', 'Api\GameTypesController');
 
+    Route::apiResource('matches', 'Api\MatchesController');
 });

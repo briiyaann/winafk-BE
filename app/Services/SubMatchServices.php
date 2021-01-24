@@ -98,4 +98,9 @@ class SubMatchServices
     public function getSingleOdds($sub_match_id, $match_id, $team_id) {
         return $this->sub_match->getSingleOdds($sub_match_id, $match_id, $team_id);
     }
+
+    public function getSubmatchOdds($match_id)
+    {
+        return $this->sub_match->getSubmatchOdds($match_id);
+    }
 }

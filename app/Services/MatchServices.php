@@ -40,4 +40,14 @@ class MatchServices
     {
         return $this->match->getMatch($id);
     }
+
+    public function getSubmatches($match_id)
+    {
+        return $this->match->getSubmatches($match_id);
+    }
+
+    public function updateMatchSubmatch($id, $data)
+    {
+        return $this->match->updateMatchSubmatch($id, $data);
+    }
 }

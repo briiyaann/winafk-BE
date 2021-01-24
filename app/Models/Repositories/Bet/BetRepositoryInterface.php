@@ -9,4 +9,8 @@ interface BetRepositoryInterface
     public function store($data);
 
     public function getBetsByMatch($match_id);
+
+    public function getBetsByMatchSubmatch($match_id, $submatch_id);
+
+    public function delete($id);
 }

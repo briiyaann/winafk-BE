@@ -38,4 +38,14 @@ class MatchRepository implements MatchRepositoryInterface
     {
         return Match::where('id', $id)->first();
     }
+
+    public function getSubmatches($match_id)
+    {
+        return MatchSubmatch::where('match_id', $match_id)->get();
+    }
+
+    public function updateMatchSubmatch($id, $data)
+    {
+        return MatchSubmatch::where('id', $id)->update($data);
+    }
 }

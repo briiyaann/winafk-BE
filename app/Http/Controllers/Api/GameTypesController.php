@@ -22,6 +22,8 @@ class GameTypesController extends Controller
     ){
         $this->gameType = $gameType;
         $this->common = $common;
+
+        $this->middleware('auth:api');
     }
 
     /**

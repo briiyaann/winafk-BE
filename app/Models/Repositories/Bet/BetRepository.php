@@ -17,4 +17,16 @@ class BetRepository implements BetRepositoryInterface
     {
         return Bet::where('match_id', $match_id)->get();
     }
+
+    public function getBetsByMatchSubmatch($match_id, $submatch_id)
+    {
+        return Bet::where('match_id', $match_id)
+            ->where('sub_match_id', $submatch_id)
+            ->get();
+    }
+
+    public function delete($id)
+    {
+        return Bet::where('id', $id)->delete();
+    }
 }

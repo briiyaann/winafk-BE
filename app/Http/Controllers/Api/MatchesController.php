@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\Controller;
 use App\Models\Core\Team;
+use App\Services\BetServices;
 use App\Services\MatchServices;
 use App\Services\SubMatchServices;
 use App\Services\TeamServices;
+use App\Services\UserSerivces;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -23,16 +25,26 @@ class MatchesController extends Controller
 
     public $submatch;
 
+    public $bet;
+
+    public $user;
+
     public function __construct(
         CommonController $common,
         MatchServices $match,
         SubMatchServices $submatch,
-        TeamServices $team
+        TeamServices $team,
+        BetServices $bet,
+        UserSerivces $user
     ){
         $this->common = $common;
         $this->match = $match;
         $this->submatch = $submatch;
         $this->team = $team;
+        $this->bet = $bet;
+        $this->user = $user;
+
+        $this->middleware('auth:api')->except('index');
     }
 
     /**
@@ -170,6 +182,72 @@ class MatchesController extends Controller
             $data['team_id'] = $team;
 
             $save = $this->submatch->addSubmatchOdds($data);
+        }
+
+        return true;
+    }
+
+    public function startMatch(Request $request, $id)
+    {
+        $match = $this->match->getMatch($id);
+
+        if(!$match) return $this->common->createErrorMsg('no_match', 'Match not found');
+
+        $sub_matches = $this->match->getSubmatches($id);
+
+        //loop over submatches and determine of invalid base on odds
+        foreach ($sub_matches as $sub_match)
+        {
+            $is_valid = true;
+
+            foreach ($sub_match->odds as $odd) {
+                if(intval($odd->bets) == 0)
+                    $is_valid = false;
+            }
+
+            if(!$is_valid) {
+                $refund = $this->refundPlayer($sub_match);
+
+                //invalidate
+                $m_submatch = [
+                    'status' => 'invalid'
+                ];
+
+                $this->match->updateMatchSubmatch($sub_match->id, $m_submatch);
+            } else {
+                //update to ongoing
+                $m_submatch = [
+                    'status' => 'ongoing'
+                ];
+
+                $this->match->updateMatchSubmatch($sub_match->id, $m_submatch);
+            }
+        }
+
+        return $this->common->returnSuccessWithData(['success' => true]);
+    }
+
+    public function refundPlayer($submatch)
+    {
+        $bets = $this->bet->getBetsByMatchSubmatch($submatch->match_id, $submatch->sub_match_id);
+
+        foreach($bets as $bet)
+        {
+            $amount = $bet->amount;
+            $user_id = $bet->user_id;
+
+            $user = $this->user->findUser($user_id);
+
+            if($user) {
+                $cur_amount = intval($user->coins);
+                $update_data = [
+                    'coins' => $cur_amount + $amount
+                ];
+
+                $this->user->updateUser($user_id, $update_data);
+            }
+
+            $this->bet->delete($bet->id);
         }
 
         return true;

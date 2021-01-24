@@ -15,4 +15,8 @@ interface MatchRepositoryInterface
     public function addMatchSubMatch($data);
 
     public function getMatch($id);
+
+    public function getSubmatches($match_id);
+
+    public function updateMatchSubmatch($id, $data);
 }
