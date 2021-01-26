@@ -52,10 +52,14 @@ Route::group(['prefix' => 'v1'], function() {
 
        Route::apiResource('bets', 'Api\BetsController');
 
+        Route::apiResource('matches', 'Api\MatchesController');
+
        Route::get('logout', 'Api\UsersController@logout');
     });
 
     Route::apiResource('game-types', 'Api\GameTypesController');
 
-    Route::apiResource('matches', 'Api\MatchesController');
+    Route::get('get-matches/{status}', 'Api\MatchesController@getMatches');
+
+    Route::get('matches/{id}/get-submatches', 'Api\MatchesController@getSubmatches');
 });

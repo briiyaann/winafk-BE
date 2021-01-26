@@ -42,8 +42,6 @@ class MatchesController extends Controller
         $this->team = $team;
         $this->bet = $bet;
         $this->user = $user;
-
-        $this->middleware('auth:api')->except('index');
     }
 
     /**
@@ -85,6 +83,55 @@ class MatchesController extends Controller
         }
 
         return $this->common->returnSuccessWithData($matches);
+    }
+
+    public function getMatches(Request $request, $status)
+    {
+        $param = $request->input('type');
+
+        $param = (!$param || $param == 0) ? null : $param;
+
+        $matches = $this->match->getListByStatus($param, $status);
+
+        foreach ($matches as $key => $match)
+        {
+            $teams = [];
+
+            foreach($match['matchTeams'] as $match_team) {
+                $mt = $this->team->show($match_team['team_id']);
+
+                array_push($teams, $mt);
+            }
+
+            unset($matches[$key]['matchTeams']);
+            $matches[$key]['teams'] = $teams;
+
+            $sub_matches = [];
+
+            foreach($match['matchSubmatch'] as $submatch) {
+                $sb = $this->submatch->show($submatch['sub_match_id']);
+
+                array_push($sub_matches, $sb);
+            }
+
+            unset($matches[$key]['matchSubmatch']);
+            $matches[$key]['sub_matches'] = $sub_matches;
+        }
+
+        return $this->common->returnSuccessWithData($matches);
+    }
+
+    public function getSubmatches($id)
+    {
+        $match = $this->match->getMatch($id);
+        $sub_match = $this->match->getSubmatches($id);
+
+        $return_data = [
+            'match' => $match,
+            'sub_match' => $sub_match
+        ];
+
+        return $this->common->returnSuccessWithData($return_data);
     }
 
     /**

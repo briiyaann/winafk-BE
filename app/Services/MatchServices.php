@@ -26,6 +26,11 @@ class MatchServices
         return $this->match->getList($param);
     }
 
+    public function getListByStatus($param, $status)
+    {
+        return $this->match->getListByStatus($param, $status);
+    }
+
     public function addMatchTeam($data)
     {
         return $this->match->addMatchTeam($data);

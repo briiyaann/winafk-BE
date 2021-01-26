@@ -3,10 +3,13 @@
 namespace App\Models\Core;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Match extends Model
 {
     protected $fillable = ['name', 'game_type_id', 'league_id', 'schedule', 'fee', 'match_count', 'label', 'status', 'status_label', 'current_round'];
+
+    protected  $appends = ['teams'];
 
     public function subMatches()
     {
@@ -28,4 +31,21 @@ class Match extends Model
         return $this->belongsTo('App\Models\Core\League');
     }
 
+    public function getTeamsAttribute()
+    {
+        $mt = DB::table('match_teams')
+            ->where('match_id', $this->id)
+            ->get();
+
+        $teams = [];
+
+        foreach ($mt as $m)
+        {
+            $team = DB::table('teams')->where('id', $m->team_id)->first();
+
+            array_push($teams, $team);
+        }
+
+        return $teams;
+    }
 }

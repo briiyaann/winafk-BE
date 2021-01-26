@@ -213,7 +213,8 @@ class UsersController extends Controller
                     'birthday' => $user->birthday,
                     'type' => $user->user_role,
                     'username' => $user->username,
-                    'id' => $user->id
+                    'id' => $user->id,
+                    'afkcoins' => $user->coins,
                 ];
                 $return = [
                     'token' => $user->createToken('winAFK')->accessToken,
