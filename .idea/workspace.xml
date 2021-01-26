@@ -3,17 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="7b8b93e7-ef8c-4732-8c50-a2be33372566" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/GameTypesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/GameTypesController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/MatchesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/MatchesController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/Core/Bet.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Core/Bet.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Core/MatchSubmatch.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Core/MatchSubmatch.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Core/Match.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Core/Match.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/Repositories/Bet/BetRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Repositories/Bet/BetRepository.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/Repositories/Bet/BetRepositoryInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Repositories/Bet/BetRepositoryInterface.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/Repositories/Match/MatchRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Repositories/Match/MatchRepository.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/Repositories/Match/MatchRepositoryInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Repositories/Match/MatchRepositoryInterface.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Services/BetServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/BetServices.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Services/MatchServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/MatchServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/SubMatchServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/SubMatchServices.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -266,7 +264,10 @@
       <workItem from="1611123997001" duration="5618000" />
       <workItem from="1611156751667" duration="1025000" />
       <workItem from="1611223618567" duration="5325000" />
-      <workItem from="1611494448302" duration="7637000" />
+      <workItem from="1611494448302" duration="8239000" />
+      <workItem from="1611547251060" duration="10293000" />
+      <workItem from="1611582274308" duration="489000" />
+      <workItem from="1611645733270" duration="8034000" />
     </task>
     <servers />
   </component>

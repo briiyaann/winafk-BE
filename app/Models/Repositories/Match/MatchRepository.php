@@ -48,4 +48,9 @@ class MatchRepository implements MatchRepositoryInterface
     {
         return MatchSubmatch::where('id', $id)->update($data);
     }
+
+    public function updateMatch($id, $data)
+    {
+        return Match::where('id', $id)->update($data);
+    }
 }

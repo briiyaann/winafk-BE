@@ -31,6 +31,11 @@ class BetServices
         return $this->bet->getBetsByMatchSubmatch($match_id, $submatch_id);
     }
 
+    public function getBetsByMatchSubmatchTeam($match_id, $submatch_id, $team_id)
+    {
+        return $this->bet->getBetsByMatchSubmatchTeam($match_id, $submatch_id, $team_id);
+    }
+
     public function delete($id)
     {
         return $this->bet->delete($id);

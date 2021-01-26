@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Match extends Model
 {
-    protected $fillable = ['name', 'game_type_id', 'league_id', 'schedule', 'fee', 'match_count', 'label', 'status', 'status_label'];
+    protected $fillable = ['name', 'game_type_id', 'league_id', 'schedule', 'fee', 'match_count', 'label', 'status', 'status_label', 'current_round'];
 
     public function subMatches()
     {
