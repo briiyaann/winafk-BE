@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\Controller;
-use App\Models\Core\Team;
 use App\Services\BetServices;
 use App\Services\MatchServices;
 use App\Services\SubMatchServices;
@@ -191,6 +190,23 @@ class MatchesController extends Controller
     {
         $match = $this->match->getMatch($id);
 
+        if($match->status == 'ongoing')
+        {
+            //require round number before starting the match
+            $round = $request->get('round');
+
+            if(!$round) return $this->common->createErrorMsg('no_round', 'Round is required');
+
+            $match_data = [
+                'current_round' => $round,
+                'status_label' => 'Round ' . $round . 'has started.'
+            ];
+
+            $this->match->updateMatch($id, $match_data);
+
+            return $this->common->returnSuccessWithData(['success' => true]);
+        }
+
         if(!$match) return $this->common->createErrorMsg('no_match', 'Match not found');
 
         $sub_matches = $this->match->getSubmatches($id);
@@ -224,6 +240,14 @@ class MatchesController extends Controller
             }
         }
 
+        $match_data = [
+            'status' => 'ongoing',
+            'status_label' => 'round 1 started.',
+            'current_round' => '1'
+        ];
+
+        $this->match->updateMatch($id, $match_data);
+
         return $this->common->returnSuccessWithData(['success' => true]);
     }
 
@@ -251,6 +275,79 @@ class MatchesController extends Controller
         }
 
         return true;
+    }
+
+    public function endMatch(Request $request, $match_id)
+    {
+        $status = $request->get('status');
+
+        $round = $request->get('round');
+
+        if(!$round && $status !== 'final') return $this->common->createErrorMsg('round', 'Match round is required.');
+
+        $winners = $request->get('winner');
+
+        if($status == 'round')
+        {
+            //get all bets
+            foreach($winners as $winner)
+            {
+                $this->processWinner($match_id, $winner);
+            }
+
+            $match_data = [
+                'status_label' => 'End of round ' . $round
+            ];
+
+            $this->match->updateMatch($match_id, $match_data);
+
+            return $this->common->returnSuccessWithData(['success' => true]);
+        } elseif($status == 'final')
+        {
+            foreach($winners as $winner)
+            {
+                $this->processWinner($match_id, $winner);
+            }
+
+            $match_data = [
+                'status_label' => 'Match ended',
+                'status' => 'settled',
+                'current_round' => null
+            ];
+
+            $this->match->updateMatch($match_id, $match_data);
+
+            return $this->common->returnSuccessWithData(['success' => true]);
+        }
+    }
+
+    public function processWinner($match_id, $winner)
+    {
+        $bets = $this->bet->getBetsByMatchSubmatchTeam($match_id, $winner['sub_match_id'], $winner['team_id']);
+
+        foreach ($bets as $bet)
+        {
+            $amount = $bet->amount;
+            $odds = $bet->odds->odds;
+
+            $payout = intval($amount) * intval($odds);
+
+            $user = $this->user->findUser($bet->user_id);
+
+            $user_coin = $user->coins;
+
+            $payout_data = [
+                'coins' => $user_coin + $payout
+            ];
+
+            $this->user->updateUser($bet->user_id, $payout_data);
+        }
+        //settle submatch
+        $sub_match_data = [
+            'status' => 'settled'
+        ];
+
+        $this->match->updateMatchSubmatch($winner['sub_match_id'], $sub_match_data);
     }
 
     /**

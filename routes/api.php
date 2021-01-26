@@ -38,6 +38,8 @@ Route::group(['prefix' => 'v1'], function() {
 
        Route::post('matches/{id}/start', 'Api\MatchesController@startMatch');
 
+        Route::post('matches/{id}/end', 'Api\MatchesController@endMatch');
+
        Route::apiResource('sub-matches', 'Api\SubMatchesController');
 
        Route::get('topups/user/{id}', 'Api\TopupsController@getList');

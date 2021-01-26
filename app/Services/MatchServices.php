@@ -50,4 +50,9 @@ class MatchServices
     {
         return $this->match->updateMatchSubmatch($id, $data);
     }
+
+    public function updateMatch($id, $data)
+    {
+        return $this->match->updateMatch($id, $data);
+    }
 }
