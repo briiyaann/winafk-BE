@@ -17,7 +17,6 @@ class CreateGameTypesTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('logo');
             $table->timestamps();
             $table->softDeletes();
         });
