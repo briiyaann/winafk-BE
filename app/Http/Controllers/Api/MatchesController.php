@@ -124,11 +124,15 @@ class MatchesController extends Controller
     public function getSubmatches($id)
     {
         $match = $this->match->getMatch($id);
-        $sub_match = $this->match->getSubmatches($id);
+        $sub_matches = $this->match->getSubmatches($id);
+        foreach ($sub_matches as $key => $sub_match) {
+            $sub = $this->submatch->show($sub_match->sub_match_id);
 
+            $sub_matches[$key]['data'] = $sub;
+        }
         $return_data = [
             'match' => $match,
-            'sub_match' => $sub_match
+            'sub_match' => $sub_matches
         ];
 
         return $this->common->returnSuccessWithData($return_data);
