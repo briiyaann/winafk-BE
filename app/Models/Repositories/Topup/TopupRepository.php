@@ -10,7 +10,7 @@ class TopupRepository implements TopupRepositoryInterface
 {
     public function getList($id)
     {
-        return Topup::where('user_id', $id)->get();
+        return Topup::where('user_id', $id)->with('user')->get();
     }
 
     public function store($data)
@@ -25,7 +25,7 @@ class TopupRepository implements TopupRepositoryInterface
 
     public function getAllByStatus($status)
     {
-        return Topup::where('status', $status)->get();
+        return Topup::where('status', $status)->with('user')->get();
     }
 
     public function getAll()
