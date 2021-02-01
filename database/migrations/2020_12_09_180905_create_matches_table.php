@@ -18,10 +18,13 @@ class CreateMatchesTable extends Migration
             $table->string('name');
             $table->integer('game_type_id');
             $table->integer('league_id');
-            $table->date('schedule');
+            $table->datetime('schedule');
             $table->integer('fee');
             $table->integer('match_count');
             $table->string('label');
+            $table->string('status')->default('upcoming');
+            $table->string('status_label')->nullable();
+            $table->string('current_round')->nullable();
             $table->timestamps();
         });
     }
