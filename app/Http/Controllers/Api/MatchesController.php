@@ -172,7 +172,7 @@ class MatchesController extends Controller
                 'name' => $request->get('name'),
                 'game_type_id' => $request->get('game_type_id'),
                 'league_id' => $request->get('league_id'),
-                'schedule' => Carbon::parse($request->get('schedule'))->format('Y-m-d H:i:s'),
+                'schedule' => Carbon::parse($request->get('schedule'), 'GMT')->format('Y-m-d H:i:s'),
                 'fee' => $request->get('fee'),
                 'match_count' => $request->get('match_count'),
                 'label' => $request->get('label'),
