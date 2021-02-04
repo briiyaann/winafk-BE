@@ -51,11 +51,8 @@ class MatchesController extends Controller
      */
     public function index(Request $request)
     {
-        $param = $request->input('type');
 
-        $param = (!$param || $param == 0) ? null : $param;
-
-        $matches = $this->match->getList($param);
+        $matches = $this->match->getList();
 
         foreach ($matches as $key => $match)
         {
@@ -250,7 +247,8 @@ class MatchesController extends Controller
 
             $match_data = [
                 'current_round' => $round,
-                'status_label' => 'Round ' . $round . 'has started.'
+                'status_label' => 'Round ' . $round . 'has started.',
+                'end_round' => null
             ];
 
             $this->match->updateMatch($id, $match_data);
@@ -328,15 +326,35 @@ class MatchesController extends Controller
         return true;
     }
 
+    public function cancelMatch($match_id)
+    {
+        $sub_matches = $this->match->getSubmatches($match_id);
+
+        foreach ($sub_matches as $sub_match) {
+            $this->refundPlayer($sub_match);
+        }
+
+        return $this->common->returnSuccessWithData(['success' => true]);
+    }
+
     public function endMatch(Request $request, $match_id)
     {
         $status = $request->get('status');
 
         $round = $request->get('round');
 
-        if(!$round && $status !== 'final') return $this->common->createErrorMsg('round', 'Match round is required.');
+        if(!$round) return $this->common->createErrorMsg('round', 'Match round is required.');
 
         $winners = $request->get('winner');
+
+        // add match winner
+        $match_winner_data = [
+            'match_id' => $match_id,
+            'round' => $round,
+            'team_winner' => $request->get('team_winner')
+        ];
+
+        $this->match->addMatchRoundWinner($match_winner_data);
 
         if($status == 'round')
         {
@@ -347,7 +365,8 @@ class MatchesController extends Controller
             }
 
             $match_data = [
-                'status_label' => 'End of round ' . $round
+                'status_label' => 'End of round ' . $round,
+                'end_round' => $round
             ];
 
             $this->match->updateMatch($match_id, $match_data);
@@ -395,7 +414,8 @@ class MatchesController extends Controller
         }
         //settle submatch
         $sub_match_data = [
-            'status' => 'settled'
+            'status' => 'settled',
+            'team_winner' => $winner['team_id']
         ];
 
         $this->match->updateMatchSubmatch($winner['sub_match_id'], $sub_match_data);

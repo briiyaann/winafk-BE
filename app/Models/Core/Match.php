@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class Match extends Model
 {
-    protected $fillable = ['name', 'game_type_id', 'league_id', 'schedule', 'fee', 'match_count', 'label', 'status', 'status_label', 'current_round'];
+    protected $fillable = ['name', 'game_type_id', 'league_id', 'schedule', 'fee', 'match_count', 'label', 'status', 'status_label', 'current_round', 'end_round'];
 
     protected  $appends = ['teams'];
 

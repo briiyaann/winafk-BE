@@ -21,9 +21,9 @@ class MatchServices
         return $this->match->store($data);
     }
 
-    public function getList($param)
+    public function getList()
     {
-        return $this->match->getList($param);
+        return $this->match->getList();
     }
 
     public function getListByStatus($param, $status)
@@ -59,5 +59,10 @@ class MatchServices
     public function updateMatch($id, $data)
     {
         return $this->match->updateMatch($id, $data);
+    }
+
+    public function addMatchRoundWinner($data)
+    {
+        return $this->match->addMatchRoundWinner($data);
     }
 }

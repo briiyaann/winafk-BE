@@ -5,6 +5,7 @@ namespace App\Models\Repositories\Match;
 
 
 use App\Models\Core\Match;
+use App\Models\Core\MatchRoundWinner;
 use App\Models\Core\MatchSubmatch;
 use App\Models\Core\MatchTeam;
 
@@ -15,13 +16,11 @@ class MatchRepository implements MatchRepositoryInterface
         return Match::create($data);
     }
 
-    public function getList($param)
+    public function getList()
     {
-        if($param) {
-            return Match::where('game_type_id', $param)->with('league')->with('matchSubmatch')->with('matchTeams')->get();
-        } else {
-            return Match::with('matchSubmatch')->with('league')->with('matchTeams')->get();
-        }
+
+        return Match::with('matchSubmatch')->with('league')->with('matchTeams')->get();
+
     }
 
     public function getListByStatus($param, $status)
@@ -61,5 +60,10 @@ class MatchRepository implements MatchRepositoryInterface
     public function updateMatch($id, $data)
     {
         return Match::where('id', $id)->update($data);
+    }
+
+    public function addMatchRoundWinner($data)
+    {
+        return MatchRoundWinner::create($data);
     }
 }

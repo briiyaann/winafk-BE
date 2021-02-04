@@ -8,7 +8,7 @@ interface MatchRepositoryInterface
 {
     public function store($data);
 
-    public function getList($param);
+    public function getList();
 
     public function getListByStatus($param, $status);
 
@@ -23,4 +23,6 @@ interface MatchRepositoryInterface
     public function updateMatchSubmatch($id, $data);
 
     public function updateMatch($id, $data);
+
+    public function addMatchRoundWinner($data);
 }
