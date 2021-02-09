@@ -52,6 +52,13 @@ class MatchRepository implements MatchRepositoryInterface
         return MatchSubmatch::where('match_id', $match_id)->get();
     }
 
+    public function getSubmatchByMatchidSubmatchid($match_id, $sub_match_id)
+    {
+        return MatchSubmatch::where('match_id', $match_id)
+                ->where('sub_match_id', $sub_match_id)
+                ->first();
+    }
+
     public function updateMatchSubmatch($id, $data)
     {
         return MatchSubmatch::where('id', $id)->update($data);

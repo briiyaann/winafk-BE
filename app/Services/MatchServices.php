@@ -51,6 +51,10 @@ class MatchServices
         return $this->match->getSubmatches($match_id);
     }
 
+    public function getSubmatchByMatchidSubmatchid($match_id, $sub_match_id) {
+        return $this->match->getSubmatchByMatchidSubmatchid($match_id, $sub_match_id);
+    }
+
     public function updateMatchSubmatch($id, $data)
     {
         return $this->match->updateMatchSubmatch($id, $data);

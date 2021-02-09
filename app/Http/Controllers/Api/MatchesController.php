@@ -68,15 +68,14 @@ class MatchesController extends Controller
             $matches[$key]['teams'] = $teams;
 
             $sub_matches = [];
-
-            foreach($match['matchSubmatch'] as $submatch) {
+            foreach($match['matchSubmatch'] as $skey => $submatch) {
                 $sb = $this->submatch->show($submatch['sub_match_id']);
 
-                array_push($sub_matches, $sb);
+//                array_push($sub_matches, $sb);
+                $matches[$key]['matchSubmatch'][$skey]['sub_match_detail'] = $sb;
             }
 
-            unset($matches[$key]['matchSubmatch']);
-            $matches[$key]['sub_matches'] = $sub_matches;
+//            $matches[$key]['matchSubmatch']['sub_matches'] = $sub_matches;
         }
 
         return $this->common->returnSuccessWithData($matches);
@@ -196,7 +195,8 @@ class MatchesController extends Controller
                     $sub_data = [
                         'match_id' => $match->id,
                         'sub_match_id' => $sub_match,
-                        'round' => $submatch->round
+                        'round' => $submatch->round,
+                        'status' => 'open'
                     ];
 
                     //add odds per team
@@ -247,8 +247,8 @@ class MatchesController extends Controller
 
             $match_data = [
                 'current_round' => $round,
-                'status_label' => 'Round ' . $round . 'has started.',
-                'end_round' => null
+                'status_label' => 'Round ' . $round . ' has started.',
+                'ended_round' => null
             ];
 
             $this->match->updateMatch($id, $match_data);
@@ -356,6 +356,21 @@ class MatchesController extends Controller
 
         $this->match->addMatchRoundWinner($match_winner_data);
 
+        if(count($request->get('is_draw_invalid')) > 0) {
+            //process and refund bets
+            foreach($request->get('is_draw_invalid') as $idi_submatch) {
+                $sub_match = $this->match->getSubmatchByMatchidSubmatchid($match_id, $idi_submatch['sub_match']);
+
+                $this->refundPlayer($sub_match);
+
+                $sub_data = [
+                    'status' => $idi_submatch['definition']
+                ];
+
+                $this->match->updateMatchSubmatch($sub_match->id, $sub_data);
+            }
+        }
+
         if($status == 'round')
         {
             //get all bets
@@ -366,7 +381,7 @@ class MatchesController extends Controller
 
             $match_data = [
                 'status_label' => 'End of round ' . $round,
-                'end_round' => $round
+                'ended_round' => $round
             ];
 
             $this->match->updateMatch($match_id, $match_data);
@@ -418,7 +433,9 @@ class MatchesController extends Controller
             'team_winner' => $winner['team_id']
         ];
 
-        $this->match->updateMatchSubmatch($winner['sub_match_id'], $sub_match_data);
+        $submatch = $this->match->getSubmatchByMatchidSubmatchid($match_id, $winner['sub_match_id']);
+
+        $this->match->updateMatchSubmatch($submatch->id, $sub_match_data);
     }
 
     /**

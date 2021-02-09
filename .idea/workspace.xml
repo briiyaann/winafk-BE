@@ -2,16 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7b8b93e7-ef8c-4732-8c50-a2be33372566" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/winafk.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/winafk.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/MatchesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/MatchesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Core/Match.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Core/Match.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/Repositories/Match/MatchRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Repositories/Match/MatchRepository.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/Repositories/Match/MatchRepositoryInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Repositories/Match/MatchRepositoryInterface.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Services/MatchServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/MatchServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -274,7 +269,10 @@
       <workItem from="1612173979116" duration="4113000" />
       <workItem from="1612236566383" duration="6495000" />
       <workItem from="1612326816482" duration="11702000" />
-      <workItem from="1612417708194" duration="3581000" />
+      <workItem from="1612417708194" duration="4148000" />
+      <workItem from="1612667040108" duration="15451000" />
+      <workItem from="1612758504072" duration="3230000" />
+      <workItem from="1612850826347" duration="4037000" />
     </task>
     <servers />
   </component>
@@ -286,10 +284,10 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="725" y="344" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1080@0.0.1920.1080" timestamp="1606834855956" />
-    <state x="640" y="277" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1609899904301">
+    <state x="640" y="277" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1612667105965">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="640" y="277" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1609899904301" />
+    <state x="640" y="277" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1612667105965" />
     <state x="424" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1607748505791">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
