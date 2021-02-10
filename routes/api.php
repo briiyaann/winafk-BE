@@ -16,45 +16,49 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1'], function() {
     Route::group(['prefix' => 'user', 'middleware' => 'guest'], function() {
-       Route::post('register', 'Api\UsersController@register');
+        Route::post('register', 'Api\UsersController@register');
 
-       Route::post('verify', 'Api\UsersController@verify');
+        Route::get('{id}', 'Api\UsersController@getUser');
 
-       Route::post('forgot-password', 'Api\UsersController@forgotPassword');
+        Route::post('verify', 'Api\UsersController@verify');
 
-       Route::get('verify-token/{token}', 'Api\UsersController@verifyToken');
+        Route::post('forgot-password', 'Api\UsersController@forgotPassword');
 
-       Route::post('password-reset', 'Api\UsersController@passwordReset');
+        Route::get('verify-token/{token}', 'Api\UsersController@verifyToken');
 
-       Route::post('login', 'Api\UsersController@login');
+        Route::post('password-reset', 'Api\UsersController@passwordReset');
+
+        Route::post('login', 'Api\UsersController@login');
     });
 
     Route::group(['middleware' => 'auth:api'], function() {
-       Route::get('user/change-password', 'Api\UsersController@changePassword');
+        Route::get('user/change-password', 'Api\UsersController@changePassword');
 
-       Route::apiResource('teams', 'Api\TeamsController');
+        Route::apiResource('teams', 'Api\TeamsController');
 
-       Route::apiResource('leagues', 'Api\LeagueController');
+        Route::apiResource('leagues', 'Api\LeagueController');
 
-       Route::post('matches/{id}/start', 'Api\MatchesController@startMatch');
+        Route::post('matches/{id}/start', 'Api\MatchesController@startMatch');
 
         Route::post('matches/{id}/end', 'Api\MatchesController@endMatch');
 
-       Route::apiResource('sub-matches', 'Api\SubMatchesController');
+        Route::post('matches/{id}/cancel', 'Api\MatchesController@cancelMatch');
 
-       Route::get('topups/user/{id}', 'Api\TopupsController@getList');
+        Route::apiResource('sub-matches', 'Api\SubMatchesController');
 
-       Route::get('topups/admin/{status}', 'Api\TopupsController@getAllByStatus');
+        Route::get('topups/user/{id}', 'Api\TopupsController@getList');
 
-       Route::post('topups', 'Api\TopupsController@store');
+        Route::get('topups/admin/{status}', 'Api\TopupsController@getAllByStatus');
 
-       Route::put('topups/{id}', 'Api\TopupsController@update');
+        Route::post('topups', 'Api\TopupsController@store');
 
-       Route::apiResource('bets', 'Api\BetsController');
+        Route::put('topups/{id}', 'Api\TopupsController@update');
+
+        Route::apiResource('bets', 'Api\BetsController');
 
         Route::apiResource('matches', 'Api\MatchesController');
 
-       Route::get('logout', 'Api\UsersController@logout');
+        Route::get('logout', 'Api\UsersController@logout');
     });
 
     Route::apiResource('game-types', 'Api\GameTypesController');

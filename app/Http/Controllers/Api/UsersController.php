@@ -229,6 +229,13 @@ class UsersController extends Controller
 
     }
 
+    public function getUser($id)
+    {
+        $user = $this->user->findUser($id);
+
+        return $this->common->returnSuccessWithData($user);
+    }
+
     public function changePassword(Request $request)
     {
         $rules = [

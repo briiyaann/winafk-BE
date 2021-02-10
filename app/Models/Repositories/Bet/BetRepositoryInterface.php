@@ -14,5 +14,7 @@ interface BetRepositoryInterface
 
     public function getBetsByMatchSubmatchTeam($match_id, $submatch_id, $team_id);
 
+    public function getBetsBySubMatchByUserByMatch($sub_match_id, $user_id, $match_id);
+
     public function delete($id);
 }

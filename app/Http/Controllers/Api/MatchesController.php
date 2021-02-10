@@ -11,6 +11,7 @@ use App\Services\TeamServices;
 use App\Services\UserSerivces;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -67,15 +68,13 @@ class MatchesController extends Controller
             unset($matches[$key]['matchTeams']);
             $matches[$key]['teams'] = $teams;
 
-            $sub_matches = [];
+
             foreach($match['matchSubmatch'] as $skey => $submatch) {
                 $sb = $this->submatch->show($submatch['sub_match_id']);
 
-//                array_push($sub_matches, $sb);
                 $matches[$key]['matchSubmatch'][$skey]['sub_match_detail'] = $sb;
             }
 
-//            $matches[$key]['matchSubmatch']['sub_matches'] = $sub_matches;
         }
 
         return $this->common->returnSuccessWithData($matches);
@@ -83,6 +82,9 @@ class MatchesController extends Controller
 
     public function getMatches(Request $request, $status)
     {
+        $user = auth('api')->user();
+        $user_id = $user ? $user->id : null;
+
         $param = $request->input('type');
 
         $param = (!$param || $param == 0) ? null : $param;
@@ -102,16 +104,14 @@ class MatchesController extends Controller
             unset($matches[$key]['matchTeams']);
             $matches[$key]['teams'] = $teams;
 
-            $sub_matches = [];
 
-            foreach($match['matchSubmatch'] as $submatch) {
+            foreach($match['matchSubmatch'] as $skey => $submatch) {
                 $sb = $this->submatch->show($submatch['sub_match_id']);
-
-                array_push($sub_matches, $sb);
+                $bet = $this->bet->getBetsBySubMatchByUserByMatch($submatch['sub_match_id'], $user_id, $match['id']);
+                $matches[$key]['matchSubmatch'][$skey]['bet'] = $bet;
+                $matches[$key]['matchSubmatch'][$skey]['sub_match_detail'] = $sb;
             }
 
-            unset($matches[$key]['matchSubmatch']);
-            $matches[$key]['sub_matches'] = $sub_matches;
         }
 
         return $this->common->returnSuccessWithData($matches);
@@ -247,8 +247,8 @@ class MatchesController extends Controller
 
             $match_data = [
                 'current_round' => $round,
-                'status_label' => 'Round ' . $round . ' has started.',
-                'ended_round' => null
+                'status_label' => 'Round ' . $round . 'has started.',
+                'end_round' => null
             ];
 
             $this->match->updateMatch($id, $match_data);
