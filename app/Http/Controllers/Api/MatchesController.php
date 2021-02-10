@@ -248,7 +248,7 @@ class MatchesController extends Controller
             $match_data = [
                 'current_round' => $round,
                 'status_label' => 'Round ' . $round . 'has started.',
-                'end_round' => null
+                'ended_round' => null
             ];
 
             $this->match->updateMatch($id, $match_data);

@@ -4,11 +4,6 @@
     <list default="true" id="7b8b93e7-ef8c-4732-8c50-a2be33372566" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/MatchesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/MatchesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/UsersController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/UsersController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Repositories/Bet/BetRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Repositories/Bet/BetRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Repositories/Bet/BetRepositoryInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Repositories/Bet/BetRepositoryInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/BetServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/BetServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -275,7 +270,7 @@
       <workItem from="1612667040108" duration="15451000" />
       <workItem from="1612758504072" duration="3230000" />
       <workItem from="1612850826347" duration="9856000" />
-      <workItem from="1612941903315" duration="569000" />
+      <workItem from="1612941903315" duration="1263000" />
     </task>
     <servers />
   </component>
