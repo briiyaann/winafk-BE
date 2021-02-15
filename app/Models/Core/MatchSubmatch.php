@@ -25,10 +25,6 @@ class MatchSubmatch extends Model
             ->where('match_id', $this->match_id)
             ->get();
 
-        foreach($odds as $key => $odd) {
-            unset($odds[$key]->bets);
-        }
-
         return $odds;
     }
 }
