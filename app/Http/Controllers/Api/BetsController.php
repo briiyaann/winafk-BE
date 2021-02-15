@@ -57,7 +57,6 @@ class BetsController extends Controller
     {
         $rules = [
             'user_id' => 'required',
-            'team_id' => 'required',
             'match_id' => 'required',
             'sub_match' => 'required|array'
         ];
@@ -83,16 +82,23 @@ class BetsController extends Controller
             $coins = $user_details->coins;
             $did_escape = false;
             $saved_count = 0;
+            $bet = null;
 
             foreach ($submatches as $submatch)
             {
                 $sub_data = [
                     'user_id' => $request->get('user_id'),
                     'match_id' => $request->get('match_id'),
-                    'team_id' => $request->get('team_id'),
+                    'team_id' => $submatch['team_id'],
                     'sub_match_id' => $submatch['submatch'],
                     'amount' => $submatch['amount']
                 ];
+
+                if($submatch['bet_id']) {
+                    $bet = $this->bets->getBetsBySubMatchByUserByMatch($submatch['submatch'], $request->get('user_id'), $request->get('match_id'));
+
+                    $coins = $coins + intval($bet->amount);
+                }
 
                 if($submatch['amount'] > $coins) {
                     $did_escape = true;
@@ -107,15 +113,28 @@ class BetsController extends Controller
 
                 $this->user->updateUser($request->get('user_id'), $user_data);
 
-                $save = $this->bets->store($sub_data);
+                if(!$bet) {
+                    $save = $this->bets->store($sub_data);
+                    if($save->id) {
+                        $saved_count++;
+                    }
+                } else {
+                    $update = $this->bets->updateBet($bet->id, $sub_data);
 
-                $odd = $this->submatch->getSingleOdds($submatch['submatch'], $request->get('match_id'), $request->get('team_id'));
-                //increment bet
-                $this->submatch->updateOdds(['bets' => intval($odd->bets) + intval($submatch['amount'])], $odd->id);
-
-                if($save->id) {
-                    $saved_count++;
+                    if($update) {
+                        $saved_count++;
+                    }
                 }
+
+                $odd = $this->submatch->getSingleOdds($submatch['submatch'], $request->get('match_id'), $submatch['team_id']);
+
+                $odd_bet = intval($odd->bets);
+
+                if($bet) {
+                    $odd_bet = $odd_bet - $bet->amount;
+                }
+                //increment bet
+                $this->submatch->updateOdds(['bets' => intval($odd_bet) + intval($submatch['amount'])], $odd->id);
 
                 //update odds
                 $this->submatch->calculateOdds($sub_data);

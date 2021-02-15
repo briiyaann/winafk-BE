@@ -21,6 +21,16 @@ class BetServices
         return $this->bet->store($data);
     }
 
+    public function findBet($id)
+    {
+        return $this->bet->findBet($id);
+    }
+
+    public function updateBet($id, $data)
+    {
+        return $this->bet->updateBet($id, $data);
+    }
+
     public function getBetsByMatch($match_id)
     {
         return $this->bet->getBetsByMatch($match_id);

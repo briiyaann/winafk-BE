@@ -8,6 +8,8 @@ interface TopupRepositoryInterface
 {
     public function getList($id);
 
+    public function findBet($id);
+
     public function store($data);
 
     public function update($data, $id);

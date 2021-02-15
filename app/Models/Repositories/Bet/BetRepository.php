@@ -13,6 +13,16 @@ class BetRepository implements BetRepositoryInterface
         return Bet::create($data);
     }
 
+    public function findBet($id)
+    {
+        return Bet::find($id);
+    }
+
+    public function updateBet($id, $data)
+    {
+        return Bet::where('id', $id)->update($data);
+    }
+
     public function getBetsByMatch($match_id)
     {
         return Bet::where('match_id', $match_id)->get();

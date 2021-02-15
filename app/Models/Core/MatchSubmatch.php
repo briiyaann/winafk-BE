@@ -20,9 +20,15 @@ class MatchSubmatch extends Model
 
     public function getOddsAttribute()
     {
-        return DB::table('submatch_odds')
+        $odds =  DB::table('submatch_odds')
             ->where('sub_match_id', $this->sub_match_id)
             ->where('match_id', $this->match_id)
             ->get();
+
+        foreach($odds as $key => $odd) {
+            unset($odds[$key]->bets);
+        }
+
+        return $odds;
     }
 }
