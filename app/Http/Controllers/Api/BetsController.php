@@ -82,7 +82,6 @@ class BetsController extends Controller
             $coins = $user_details->coins;
             $did_escape = false;
             $saved_count = 0;
-            $bet = null;
 
             foreach ($submatches as $submatch)
             {
@@ -94,8 +93,10 @@ class BetsController extends Controller
                     'amount' => $submatch['amount']
                 ];
 
-                if($submatch['bet_id']) {
-                    $bet = $this->bets->getBetsBySubMatchByUserByMatch($submatch['submatch'], $request->get('user_id'), $request->get('match_id'));
+                $bet = $submatch['bet_id'];
+
+                if($bet) {
+                    $bet = $this->bets->findBet($submatch['bet_id']);
 
                     $coins = $coins + intval($bet->amount);
                 }

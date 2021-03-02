@@ -57,4 +57,9 @@ class UserRepository implements UserRepositoryInterface
     {
         return User::find($id);
     }
+
+    public function findMMUsers()
+    {
+        return User::where('user_role', 3)->get();
+    }
 }

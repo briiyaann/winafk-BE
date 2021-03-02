@@ -25,4 +25,6 @@ interface UserRepositoryInterface
     public function deletePasswordReset($email);
 
     public function findUser($id);
+
+    public function findMMUsers();
 }

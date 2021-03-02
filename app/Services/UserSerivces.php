@@ -64,4 +64,8 @@ class UserSerivces
         return $this->user->findUser($id);
     }
 
+    public function findMMUsers() {
+        return $this->user->findMMUsers();
+    }
+
 }

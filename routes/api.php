@@ -42,6 +42,8 @@ Route::group(['prefix' => 'v1'], function() {
 
         Route::post('matches/{id}/end', 'Api\MatchesController@endMatch');
 
+        Route::post('matches/{id}/end-submatch', 'Api\MatchesController@endSubMatch');
+
         Route::post('matches/{id}/cancel', 'Api\MatchesController@cancelMatch');
 
         Route::apiResource('sub-matches', 'Api\SubMatchesController');
@@ -57,6 +59,10 @@ Route::group(['prefix' => 'v1'], function() {
         Route::apiResource('bets', 'Api\BetsController');
 
         Route::apiResource('matches', 'Api\MatchesController');
+
+        Route::post('matches/closebet', 'Api\MatchesController@closeBet');
+
+        Route::get('user/{id}/get-coins', 'Api\UsersController@getCoins');
 
         Route::get('logout', 'Api\UsersController@logout');
     });

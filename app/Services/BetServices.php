@@ -51,6 +51,11 @@ class BetServices
         return $this->bet->getBetsBySubMatchByUserByMatch($sub_match_id, $user_id, $match_id);
     }
 
+    public function getBettsByUserByMatch($user_id, $match_id)
+    {
+        return $this->bet->getBettsByUserByMatch($user_id, $match_id);
+    }
+
     public function delete($id)
     {
         return $this->bet->delete($id);

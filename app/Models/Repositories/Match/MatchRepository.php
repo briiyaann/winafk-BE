@@ -26,9 +26,20 @@ class MatchRepository implements MatchRepositoryInterface
     public function getListByStatus($param, $status)
     {
         if($param) {
-            return Match::where('game_type_id', $param)->where('status', $status)->with('league')->with('matchSubmatch')->with('matchTeams')->get();
+            return Match::where('game_type_id', $param)
+                ->where('status', $status)
+                ->with('league')
+                ->with('matchSubmatch')
+                ->with('matchTeams')
+                ->orderBy('updated_at', 'desc')
+                ->get();
         } else {
-            return Match::with('matchSubmatch')->where('status', $status)->with('league')->with('matchTeams')->get();
+            return Match::with('matchSubmatch')
+                ->where('status', $status)
+                ->with('league')
+                ->with('matchTeams')
+                ->orderBy('updated_at', 'desc')
+                ->get();
         }
     }
 

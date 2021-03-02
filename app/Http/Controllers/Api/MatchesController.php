@@ -89,29 +89,34 @@ class MatchesController extends Controller
 
         $param = (!$param || $param == 0) ? null : $param;
 
-        $matches = $this->match->getListByStatus($param, $status);
+        $matches = $this->match->getListByStatus($param, $status)->toArray();
 
         foreach ($matches as $key => $match)
         {
+            foreach($match['match_submatch'] as $skey => $submatch) {
+                //remove bets from odds
+                foreach($submatch['odds'] as $okey => $odd) {
+                    unset($matches[$key]['match_submatch'][$skey]['odds'][$okey]->bets);
+
+                }
+                $sb = $this->submatch->show($submatch['sub_match_id']);
+                $bet = $this->bet->getBetsBySubMatchByUserByMatch($submatch['sub_match_id'], $user_id, $match['id']);
+                $matches[$key]['match_submatch'][$skey]['bet'] = $bet;
+                $matches[$key]['match_submatch'][$skey]['sub_match_detail'] = $sb;
+            }
+
             $teams = [];
 
-            foreach($match['matchTeams'] as $match_team) {
-                $mt = $this->team->show($match_team['team_id']);
+            foreach($match['match_teams'] as $match_team) {
+                $mt = $this->team->show($match_team['team_id'])->toArray();
+                $odd = $this->submatch->getSingleOdds(1, $match['id'], $mt['id'])->toArray();
 
+                $mt['percentage'] = $odd['percentage'];
                 array_push($teams, $mt);
             }
 
-            unset($matches[$key]['matchTeams']);
+            unset($matches[$key]['match_teams']);
             $matches[$key]['teams'] = $teams;
-
-
-            foreach($match['matchSubmatch'] as $skey => $submatch) {
-                $sb = $this->submatch->show($submatch['sub_match_id']);
-                $bet = $this->bet->getBetsBySubMatchByUserByMatch($submatch['sub_match_id'], $user_id, $match['id']);
-                $matches[$key]['matchSubmatch'][$skey]['bet'] = $bet;
-                $matches[$key]['matchSubmatch'][$skey]['sub_match_detail'] = $sb;
-            }
-
         }
 
         return $this->common->returnSuccessWithData($matches);
@@ -234,70 +239,138 @@ class MatchesController extends Controller
         return true;
     }
 
+    public function removeAdminBets($user, $match, $cur_round)
+    {
+        $coins = $user->coins;
+
+        $bets = $this->bet->getBettsByUserByMatch($user->id, $match->id);
+
+        foreach ($bets as $bet) {
+            $sub_match = $this->submatch->show($bet->sub_match_id);
+
+            if(!$cur_round && $sub_match->round > 1) {
+                continue;
+            } elseif($cur_round && $sub_match->round != intval($cur_round)) {
+                continue;
+            }
+
+            $bet = $this->bet->findBet($bet->id);
+
+            $coins = $coins + intval($bet->amount);
+
+            $user_data = [
+                'coins' => $coins
+            ];
+
+            $this->user->updateUser($user->id, $user_data);
+
+            $sub_data = [
+                'amount' => 0,
+                'sub_match_id' => $bet->sub_match_id,
+                'match_id' => $match->id
+            ];
+
+            $update = $this->bet->updateBet($bet->id, $sub_data);
+
+            if($update) {
+                $odd = $this->submatch->getSingleOdds($bet->sub_match_id, $match->id , $bet->team_id);
+
+                $odd_bet = intval($odd->bets);
+
+                $odd_bet = $odd_bet - $bet->amount;
+
+                $this->submatch->updateOdds(['bets' => intval($odd_bet)], $odd->id);
+
+                //update odds
+                $this->submatch->calculateOdds($sub_data);
+            }
+        }
+    }
+
     public function startMatch(Request $request, $id)
     {
         $match = $this->match->getMatch($id);
 
+        //require round number before starting the match
+        $round = $request->get('round');
+        if(!$match) return $this->common->createErrorMsg('no_match', 'Match not found');
+
+        //remove bets from mm
+        $mm_users = $this->user->findMMUsers();
+
+        foreach($mm_users as $mm_user) {
+            $this->removeAdminBets($mm_user, $match, $round);
+        }
+
+        $sub_matches = $this->match->getSubmatches($id);
+
         if($match->status == 'ongoing')
         {
-            //require round number before starting the match
-            $round = $request->get('round');
-
             if(!$round) return $this->common->createErrorMsg('no_round', 'Round is required');
+
+            foreach ($sub_matches as $sub_match)
+            {
+                if($sub_match->round == $round) {
+                    $this->processStart($sub_match);
+                }
+            }
 
             $match_data = [
                 'current_round' => $round,
-                'status_label' => 'Round ' . $round . 'has started.',
+                'status_label' => 'Game ' . $round . ' has started.',
                 'ended_round' => null
             ];
 
             $this->match->updateMatch($id, $match_data);
 
             return $this->common->returnSuccessWithData(['success' => true]);
-        }
-
-        if(!$match) return $this->common->createErrorMsg('no_match', 'Match not found');
-
-        $sub_matches = $this->match->getSubmatches($id);
-
-        //loop over submatches and determine of invalid base on odds
-        foreach ($sub_matches as $sub_match)
-        {
-            $is_valid = true;
-
-            foreach ($sub_match->odds as $odd) {
-                if(intval($odd->bets) == 0)
-                    $is_valid = false;
+        } else {
+            //loop over submatches and determine of invalid base on odds
+            foreach ($sub_matches as $sub_match)
+            {
+                if($sub_match->round <= 1) {
+                    $this->processStart($sub_match);
+                }
             }
 
-            if(!$is_valid) {
-                $refund = $this->refundPlayer($sub_match);
+            $match_data = [
+                'status' => 'ongoing',
+                'status_label' => 'Game 1 started.',
+                'current_round' => '1'
+            ];
 
-                //invalidate
-                $m_submatch = [
-                    'status' => 'invalid'
-                ];
+            $this->match->updateMatch($id, $match_data);
 
-                $this->match->updateMatchSubmatch($sub_match->id, $m_submatch);
-            } else {
-                //update to ongoing
-                $m_submatch = [
-                    'status' => 'ongoing'
-                ];
+            return $this->common->returnSuccessWithData(['success' => true]);
+        }
+    }
 
-                $this->match->updateMatchSubmatch($sub_match->id, $m_submatch);
-            }
+    public function processStart($sub_match)
+    {
+        $is_valid = true;
+
+        foreach ($sub_match->odds as $odd) {
+            if(intval($odd->bets) == 0)
+                $is_valid = false;
         }
 
-        $match_data = [
-            'status' => 'ongoing',
-            'status_label' => 'round 1 started.',
-            'current_round' => '1'
-        ];
+        if(!$is_valid) {
+            $refund = $this->refundPlayer($sub_match);
 
-        $this->match->updateMatch($id, $match_data);
+            //invalidate
+            $m_submatch = [
+                'status' => 'invalid'
+            ];
 
-        return $this->common->returnSuccessWithData(['success' => true]);
+            $this->match->updateMatchSubmatch($sub_match->id, $m_submatch);
+        } else {
+            //update to ongoing
+            $m_submatch = [
+                'status' => 'ongoing'
+            ];
+
+            $this->match->updateMatchSubmatch($sub_match->id, $m_submatch);
+        }
     }
 
     public function refundPlayer($submatch)
@@ -332,6 +405,33 @@ class MatchesController extends Controller
 
         foreach ($sub_matches as $sub_match) {
             $this->refundPlayer($sub_match);
+        }
+
+        return $this->common->returnSuccessWithData(['success' => true]);
+    }
+
+    public function endSubMatch(Request $request, $match_id) {
+        $winners = $request->get('winner');
+
+        if(count($request->get('is_draw_invalid')) > 0) {
+            //process and refund bets
+            foreach($request->get('is_draw_invalid') as $idi_submatch) {
+                $sub_match = $this->match->getSubmatchByMatchidSubmatchid($match_id, $idi_submatch['sub_match']);
+
+                $this->refundPlayer($sub_match);
+
+                $sub_data = [
+                    'status' => $idi_submatch['definition']
+                ];
+
+                $this->match->updateMatchSubmatch($sub_match->id, $sub_data);
+            }
+        }
+
+        //get all bets
+        foreach($winners as $winner)
+        {
+            $this->processWinner($match_id, $winner);
         }
 
         return $this->common->returnSuccessWithData(['success' => true]);
@@ -380,7 +480,7 @@ class MatchesController extends Controller
             }
 
             $match_data = [
-                'status_label' => 'End of round ' . $round,
+                'status_label' => 'End of Game ' . $round,
                 'ended_round' => $round
             ];
 
@@ -438,6 +538,37 @@ class MatchesController extends Controller
         $this->match->updateMatchSubmatch($submatch->id, $sub_match_data);
     }
 
+    public function closeBet(Request $request) {
+        $match_id = $request->get('match_id');
+        $match = $this->match->getMatch($match_id);
+
+        $next_round = !$match->cur_round ? 1 : $match->cur_round + 1;
+
+        $sub_matches = $this->match->getSubmatches($match_id);
+
+        foreach ($sub_matches as $sub_match) {
+            if($next_round == 1) {
+                if($sub_match->round <= 1 && $sub_match->status == 'open') {
+                    //update to close
+                    $sub_data = [
+                        'status' => 'closed'
+                    ];
+                    $this->match->updateMatchSubmatch($sub_match->id, $sub_data);
+                }
+            } else {
+                if($sub_match->round == 1 && $sub_match->status == 'open') {
+                    //update to close
+                    $sub_data = [
+                        'status' => 'closed'
+                    ];
+                    $this->match->updateMatchSubmatch($sub_match->id, $sub_data);
+                }
+            }
+        }
+
+        return $this->common->returnSuccess();
+    }
+
     /**
      * Display the specified resource.
      *
@@ -454,11 +585,34 @@ class MatchesController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function update(Request $request, $id)
     {
-        //
+        $rules = [
+            'schedule' => 'required'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            $return_err = [];
+            foreach ($validator->errors()->toArray() as $key => $value) {
+                $return_err[$key] = $value[0];
+            }
+
+            return $this->common->returnWithErrors($return_err);
+        } else {
+            $edit_data = [
+                'schedule'=> \DateTime::createFromFormat('D M d Y H:i:s e+', $request->get('schedule'))
+            ];
+
+            $update = $this->match->updateMatch($id, $edit_data);
+
+            if($update) {
+                return $this->common->returnSuccess();
+            }
+        }
     }
 
     /**

@@ -48,7 +48,14 @@ class BetRepository implements BetRepositoryInterface
         return Bet::where('sub_match_id', $sub_match_id)
                 ->where('user_id', $user_id)
                 ->where('match_id', $match_id)
-                ->first();
+                ->get();
+    }
+
+    public function getBettsByUserByMatch($user_id, $match_id)
+    {
+        return Bet::where('user_id', $user_id)
+                ->where('match_id', $match_id)
+                ->get();
     }
 
     public function delete($id)

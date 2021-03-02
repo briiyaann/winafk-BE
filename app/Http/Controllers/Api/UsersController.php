@@ -266,6 +266,12 @@ class UsersController extends Controller
         }
     }
 
+    public function getCoins($id) {
+        $user = $this->user->findUser($id);
+
+        return $this->common->returnSuccessWithData(['coins' => $user->coins]);
+    }
+
     public function logout()
     {
         if(Auth::check()) {
@@ -273,4 +279,5 @@ class UsersController extends Controller
             return $this->common->returnSuccess();
         }
     }
+
 }

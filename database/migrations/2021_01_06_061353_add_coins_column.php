@@ -14,7 +14,7 @@ class AddCoinsColumn extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('coins')->after('avatar')->default(0);
+            $table->decimal('coins', 5, 2)->after('avatar')->default(0);
         });
     }
 

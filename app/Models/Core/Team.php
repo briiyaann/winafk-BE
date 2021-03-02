@@ -11,6 +11,8 @@ class Team extends Model
 
     protected $fillable = ['name', 'shortname', 'banner', 'winrate', 'game_type_id', 'logo'];
 
+    protected $hidden = ['deleted_at'];
+
     public function gameType()
     {
         return $this->belongsTo('App\Models\Core\GameType');

@@ -61,8 +61,8 @@ class SubMatchServices
             $team_a_odds = intval($team_a['bets']) == 0 ? 0 : (round($team_b['bets']/$team_a['bets'], 2) * $match_fee) + 1;
             $team_b_odds = intval($team_b['bets']) == 0 ? 0 : (round($team_a['bets']/$team_b['bets'], 2) * $match_fee) + 1;
 
-            $team_a_percentage = round((intval($team_a['bets'])/$total_bets) * 100, 2);
-            $team_b_percentage = round((intval($team_b['bets'])/$total_bets) * 100, 2);
+            $team_a_percentage = intval($team_a['bets']) == 0 ? 0 : round((intval($team_a['bets'])/$total_bets) * 100, 2);
+            $team_b_percentage = intval($team_b['bets']) == 0 ? 0 : round((intval($team_b['bets'])/$total_bets) * 100, 2);
 
             foreach ($submatch_odds as $submatch_odd)
             {
