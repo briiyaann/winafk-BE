@@ -65,6 +65,14 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('user/{id}/get-coins', 'Api\UsersController@getCoins');
 
         Route::get('logout', 'Api\UsersController@logout');
+
+        Route::post('withdraw', 'Api\WithdrawsController@store');
+
+        Route::get('withdraw', 'Api\WithdrawsController@index');
+
+        Route::get('matches/{user_id}', 'Api\MatchesController@getMatchesByUser');
+
+        Route::get('my-predictions', 'Api\MatchesController@myPredictions');
     });
 
     Route::apiResource('game-types', 'Api\GameTypesController');
@@ -72,4 +80,6 @@ Route::group(['prefix' => 'v1'], function() {
     Route::get('get-matches/{status}', 'Api\MatchesController@getMatches');
 
     Route::get('matches/{id}/get-submatches', 'Api\MatchesController@getSubmatches');
+
+    Route::get('recent-matches', 'Api\MatchesController@recentMatches');
 });

@@ -60,4 +60,9 @@ class BetServices
     {
         return $this->bet->delete($id);
     }
+
+    public function getBetByUserIdOnly($user_id)
+    {
+        return $this->bet->getBetByUserIdOnly($user_id);
+    }
 }

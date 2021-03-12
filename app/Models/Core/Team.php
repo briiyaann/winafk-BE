@@ -17,4 +17,8 @@ class Team extends Model
     {
         return $this->belongsTo('App\Models\Core\GameType');
     }
+
+    public function winner() {
+        return $this->hasMany('App\Models\Core\MatchWinner');
+    }
 }

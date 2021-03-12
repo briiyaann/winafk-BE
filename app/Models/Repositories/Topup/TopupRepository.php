@@ -10,7 +10,10 @@ class TopupRepository implements TopupRepositoryInterface
 {
     public function getList($id)
     {
-        return Topup::where('user_id', $id)->with('user')->get();
+        return Topup::where('user_id', $id)
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
     public function store($data)

@@ -23,4 +23,6 @@ interface BetRepositoryInterface
     public function getBettsByUserByMatch($user_id, $match_id);
 
     public function delete($id);
+
+    public function getBetByUserIdOnly($user_id);
 }

@@ -27,4 +27,14 @@ interface MatchRepositoryInterface
     public function updateMatch($id, $data);
 
     public function addMatchRoundWinner($data);
+
+    public function getMatchByMatchIds($match_ids);
+
+    public function getSettledMatches();
+
+    public function getMatchWinner($match_id, $team_id);
+
+    public function updateMatchWinner($id, $data);
+
+    public function getMatchWinnerByMatch($match_id);
 }

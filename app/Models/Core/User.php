@@ -43,4 +43,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Core\Topup');
     }
+
+    public function withdraws()
+    {
+        return $this->hasMany('App\Models\Core\Withdraw');
+    }
 }

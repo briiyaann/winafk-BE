@@ -80,6 +80,51 @@ class MatchesController extends Controller
         return $this->common->returnSuccessWithData($matches);
     }
 
+    public function myPredictions()
+    {
+        $user = auth('api')->user();
+        $user_id = $user ? $user->id : null;
+
+        $match_id_from_bets = $this->bet->getBetByUserIdOnly($user_id)->toArray();
+
+        $match_ids = [];
+        foreach($match_id_from_bets as $key => $value) {
+            array_push($match_ids, $value['match_id']);
+        }
+
+        $matches = $this->match->getMatchByMatchIds($match_ids)->toArray();
+
+        foreach ($matches as $key => $match)
+        {
+            foreach($match['match_submatch'] as $skey => $submatch) {
+                //remove bets from odds
+                foreach($submatch['odds'] as $okey => $odd) {
+                    unset($matches[$key]['match_submatch'][$skey]['odds'][$okey]->bets);
+
+                }
+                $sb = $this->submatch->show($submatch['sub_match_id']);
+                $bet = $this->bet->getBetsBySubMatchByUserByMatch($submatch['sub_match_id'], $user_id, $match['id']);
+                $matches[$key]['match_submatch'][$skey]['bet'] = $bet;
+                $matches[$key]['match_submatch'][$skey]['sub_match_detail'] = $sb;
+            }
+
+            $teams = [];
+
+            foreach($match['match_teams'] as $match_team) {
+                $mt = $this->team->show($match_team['team_id'])->toArray();
+                $odd = $this->submatch->getSingleOdds(1, $match['id'], $mt['id'])->toArray();
+
+                $mt['percentage'] = $odd['percentage'];
+                array_push($teams, $mt);
+            }
+
+            unset($matches[$key]['match_teams']);
+            $matches[$key]['teams'] = $teams;
+        }
+
+        return $this->common->returnSuccessWithData($matches);
+    }
+
     public function getMatches(Request $request, $status)
     {
         $user = auth('api')->user();
@@ -90,6 +135,42 @@ class MatchesController extends Controller
         $param = (!$param || $param == 0) ? null : $param;
 
         $matches = $this->match->getListByStatus($param, $status)->toArray();
+
+        foreach ($matches as $key => $match)
+        {
+            foreach($match['match_submatch'] as $skey => $submatch) {
+                //remove bets from odds
+                foreach($submatch['odds'] as $okey => $odd) {
+                    unset($matches[$key]['match_submatch'][$skey]['odds'][$okey]->bets);
+
+                }
+                $sb = $this->submatch->show($submatch['sub_match_id']);
+                $bet = $this->bet->getBetsBySubMatchByUserByMatch($submatch['sub_match_id'], $user_id, $match['id']);
+                $matches[$key]['match_submatch'][$skey]['bet'] = $bet;
+                $matches[$key]['match_submatch'][$skey]['sub_match_detail'] = $sb;
+            }
+
+            $teams = [];
+
+            foreach($match['match_teams'] as $match_team) {
+                $mt = $this->team->show($match_team['team_id'])->toArray();
+                $odd = $this->submatch->getSingleOdds(1, $match['id'], $mt['id'])->toArray();
+
+                $mt['percentage'] = $odd['percentage'];
+                array_push($teams, $mt);
+            }
+
+            unset($matches[$key]['match_teams']);
+            $matches[$key]['teams'] = $teams;
+        }
+
+        return $this->common->returnSuccessWithData($matches);
+    }
+
+    public function getMatchesByUser($user_id)
+    {
+
+        $matches = $this->match->getListByUser($user_id)->toArray();
 
         foreach ($matches as $key => $match)
         {
@@ -446,15 +527,19 @@ class MatchesController extends Controller
         if(!$round) return $this->common->createErrorMsg('round', 'Match round is required.');
 
         $winners = $request->get('winner');
-
+        $match_winner = $this->match->getMatchWinner($match_id, $request->get('team_winner'));
         // add match winner
         $match_winner_data = [
             'match_id' => $match_id,
-            'round' => $round,
-            'team_winner' => $request->get('team_winner')
+            'score' => $match_winner ? intval($match_winner->score) + 1 : 1,
+            'team_id' => $request->get('team_winner')
         ];
 
-        $this->match->addMatchRoundWinner($match_winner_data);
+        if($match_winner) {
+            $this->match->updateMatchWinner($match_winner->id, $match_winner_data);
+        } else {
+            $this->match->addMatchRoundWinner($match_winner_data);
+        }
 
         if(count($request->get('is_draw_invalid')) > 0) {
             //process and refund bets
@@ -624,5 +709,18 @@ class MatchesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function recentMatches()
+    {
+        $matches = $this->match->getSettledMatches()->toArray();
+
+        foreach($matches as $key => $match) {
+            $results = $this->match->getMatchWinnerByMatch($match['id']);
+
+            $matches[$key]['scores'] = $results;
+        }
+
+        return $this->common->returnSuccessWithData($matches);
     }
 }

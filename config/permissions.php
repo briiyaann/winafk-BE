@@ -7,5 +7,8 @@ return [
     ],
     'topup' => [
         'update' => ['2']
+    ],
+    'withdraw' => [
+        'update' => ['2']
     ]
 ];

@@ -69,4 +69,29 @@ class MatchServices
     {
         return $this->match->addMatchRoundWinner($data);
     }
+
+    public function getMatchByMatchIds($match_ids)
+    {
+        return $this->match->getMatchByMatchIds($match_ids);
+    }
+
+    public function getSettledMatches()
+    {
+        return $this->match->getSettledMatches();
+    }
+
+    public function getMatchWinner($match_id, $team_id)
+    {
+        return $this->match->getMatchWinner($match_id, $team_id);
+    }
+
+    public function updateMatchWinner($id, $data)
+    {
+        return $this->match->updateMatchWinner($id, $data);
+    }
+
+    public function getMatchWinnerByMatch($match_id)
+    {
+        return $this->match->getMatchWinnerByMatch($match_id);
+    }
 }

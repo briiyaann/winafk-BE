@@ -62,4 +62,12 @@ class BetRepository implements BetRepositoryInterface
     {
         return Bet::where('id', $id)->delete();
     }
+
+    public function getBetByUserIdOnly($user_id)
+    {
+        return Bet::where('user_id', $user_id)
+                ->where('amount', '!=', 0)
+                ->groupBy('match_id')
+                ->get('match_id');
+    }
 }

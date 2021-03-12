@@ -48,4 +48,9 @@ class Match extends Model
 
         return $teams;
     }
+
+    public function game_type()
+    {
+        return $this->belongsTo('App\Models\Core\GameType', 'game_type_id');
+    }
 }

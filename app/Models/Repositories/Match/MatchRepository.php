@@ -5,7 +5,7 @@ namespace App\Models\Repositories\Match;
 
 
 use App\Models\Core\Match;
-use App\Models\Core\MatchRoundWinner;
+use App\Models\Core\MatchWinner;
 use App\Models\Core\MatchSubmatch;
 use App\Models\Core\MatchTeam;
 
@@ -21,6 +21,11 @@ class MatchRepository implements MatchRepositoryInterface
 
         return Match::with('matchSubmatch')->with('league')->with('matchTeams')->get();
 
+    }
+
+    public function getListByUser($user_id)
+    {
+//        return Match::where('')
     }
 
     public function getListByStatus($param, $status)
@@ -82,6 +87,45 @@ class MatchRepository implements MatchRepositoryInterface
 
     public function addMatchRoundWinner($data)
     {
-        return MatchRoundWinner::create($data);
+        return MatchWinner::create($data);
+    }
+
+    public function getMatchWinnerByMatch($match_id)
+    {
+        return MatchWinner::where('match_id', $match_id)
+                ->with('team')
+                ->get();
+    }
+
+    public function updateMatchWinner($id, $data)
+    {
+        return MatchWinner::where('id', $id)
+                ->update($data);
+    }
+
+    public function getMatchWinner($match_id, $team_id)
+    {
+        return MatchWinner::where('match_id', $match_id)
+                    ->where('team_id', $team_id)
+                    ->first();
+    }
+
+    public function getMatchByMatchIds($match_ids)
+    {
+        return Match::whereIn('id', $match_ids)
+            ->with('league')
+            ->with('matchSubmatch')
+            ->with('matchTeams')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+    }
+
+    public function getSettledMatches()
+    {
+        return Match::where('status', 'settled')
+                ->with('game_type')
+                ->orderBy('updated_at', 'desc')
+                ->limit(15)
+                ->get();
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMatchRoundWinnersTable extends Migration
+class CreateMatchWinnersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateMatchRoundWinnersTable extends Migration
      */
     public function up()
     {
-        Schema::create('match_round_winners', function (Blueprint $table) {
+        Schema::create('match_winners', function (Blueprint $table) {
             $table->id();
             $table->integer('match_id');
-            $table->integer('round');
-            $table->integer('team_winner');
+            $table->integer('score');
+            $table->integer('team_id');
             $table->timestamps();
-            $table->softDeletes();
+            $table->softDeletes();;
         });
     }
 
@@ -30,6 +30,6 @@ class CreateMatchRoundWinnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('match_round_winners');
+        Schema::dropIfExists('match_winners');
     }
 }

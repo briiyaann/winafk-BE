@@ -62,5 +62,10 @@ class AppServiceProvider extends ServiceProvider
             'App\Models\Repositories\Bet\BetRepositoryInterface',
             'App\Models\Repositories\Bet\BetRepository'
         );
+
+        $this->app->bind(
+            'App\Models\Repositories\Withdraw\WithdrawRepositoryInterface',
+            'App\Models\Repositories\Withdraw\WithdrawRepository'
+        );
     }
 }
