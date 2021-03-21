@@ -35,4 +35,9 @@ class LeagueServices
     {
         return $this->league->getLeagueswithTeam();
     }
+
+    public function getLeagueTeamByLeague($league_id)
+    {
+        return $this->league->getLeagueTeamByLeague($league_id);
+    }
 }

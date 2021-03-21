@@ -33,7 +33,7 @@ class WithdrawRepository implements WithdrawRepositoryInterface
 
     public function getAll()
     {
-        Withdraw::all();
+        return Withdraw::with('user')->get();
     }
 
     public function getWithdraw($id)

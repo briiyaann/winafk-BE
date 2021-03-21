@@ -44,6 +44,7 @@ class SubMatchesController extends Controller
     {
         $rules = [
             'name' => 'required',
+            'round' => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);

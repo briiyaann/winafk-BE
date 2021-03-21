@@ -70,9 +70,15 @@ Route::group(['prefix' => 'v1'], function() {
 
         Route::get('withdraw', 'Api\WithdrawsController@index');
 
+        Route::get('withdraws/admin/{status}', 'Api\WithdrawsController@getAllByStatus');
+
+        Route::post('withdraws/{id}/admin', 'Api\WithdrawsController@updateWithdraw');
+
         Route::get('matches/{user_id}', 'Api\MatchesController@getMatchesByUser');
 
         Route::get('my-predictions', 'Api\MatchesController@myPredictions');
+
+        Route::get('leagues/{id}/teams', 'Api\LeagueController@getTeamsByLeague');
     });
 
     Route::apiResource('game-types', 'Api\GameTypesController');

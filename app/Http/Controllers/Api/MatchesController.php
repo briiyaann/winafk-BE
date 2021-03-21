@@ -488,6 +488,12 @@ class MatchesController extends Controller
             $this->refundPlayer($sub_match);
         }
 
+        $update_match = [
+            'status' => 'cancelled'
+        ];
+
+        $this->match->updateMatch($match_id, $update_match);
+
         return $this->common->returnSuccessWithData(['success' => true]);
     }
 

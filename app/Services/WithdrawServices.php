@@ -25,4 +25,24 @@ class WithdrawServices
     {
         return $this->withdraw->getList($id);
     }
+
+    public function getAllByStatus($status)
+    {
+        return $this->withdraw->getAllByStatus($status);
+    }
+
+    public function getAll()
+    {
+        return $this->withdraw->getAll();
+    }
+
+    public function update($data, $id)
+    {
+        return $this->withdraw->update($data, $id);
+    }
+
+    public function getWithdraw($id)
+    {
+        return $this->withdraw->getWithdraw($id);
+    }
 }

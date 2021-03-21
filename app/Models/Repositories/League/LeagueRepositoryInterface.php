@@ -13,4 +13,6 @@ interface LeagueRepositoryInterface
     public function getLeagueswithTeam();
 
     public function getLeaguewithTeam($id);
+
+    public function getLeagueTeamByLeague($league_id);
 }

@@ -170,4 +170,15 @@ class LeagueController extends Controller
     {
         //
     }
+
+    public function getTeamsByLeague($id)
+    {
+        $league_teams = $this->league->getLeagueTeamByLeague($id);
+        $teams = [];
+        foreach($league_teams as $key => $lt) {
+            array_push($teams, $lt->team);
+        }
+
+        return $this->common->returnSuccessWithData($teams);
+    }
 }

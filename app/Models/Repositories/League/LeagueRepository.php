@@ -28,4 +28,9 @@ class LeagueRepository implements LeagueRepositoryInterface
     {
         return League::where('id', $id)->with('leagueTeam')->first();
     }
+
+    public function getLeagueTeamByLeague($league_id)
+    {
+        return LeagueTeam::where('league_id', $league_id)->get('team_id');
+    }
 }
