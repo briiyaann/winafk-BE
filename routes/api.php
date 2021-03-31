@@ -31,6 +31,8 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('login', 'Api\UsersController@login');
     });
 
+    Route::get('matches/{id}', 'Api\MatchesController@getMatch');
+
     Route::group(['middleware' => 'auth:api'], function() {
         Route::get('user/change-password', 'Api\UsersController@changePassword');
 

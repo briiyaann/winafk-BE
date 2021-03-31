@@ -26,6 +26,11 @@ class MatchServices
         return $this->match->getList();
     }
 
+    public function findMatch($id)
+    {
+        return $this->match->findMatch($id);
+    }
+
     public function getListByStatus($param, $status)
     {
         return $this->match->getListByStatus($param, $status);

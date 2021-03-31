@@ -28,6 +28,15 @@ class MatchRepository implements MatchRepositoryInterface
 //        return Match::where('')
     }
 
+    public function findMatch($id)
+    {
+        return Match::where('id', $id)
+            ->with('league')
+            ->with('matchSubmatch')
+            ->with('matchTeams')
+            ->first();
+    }
+
     public function getListByStatus($param, $status)
     {
         if($param) {

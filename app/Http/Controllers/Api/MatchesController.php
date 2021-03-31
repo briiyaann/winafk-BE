@@ -125,6 +125,41 @@ class MatchesController extends Controller
         return $this->common->returnSuccessWithData($matches);
     }
 
+    public function getMatch($id)
+    {
+        $user = auth('api')->user();
+        $match = $this->match->findMatch($id)->toArray();
+        $user_id = $user ? $user->id : null;
+
+        foreach($match['match_submatch'] as $skey => $submatch) {
+            //remove bets from odds
+            foreach($submatch['odds'] as $okey => $odd) {
+                unset($match['match_submatch'][$skey]['odds'][$okey]->bets);
+            }
+
+            $sb = $this->submatch->show($submatch['sub_match_id']);
+            $bet = $this->bet->getBetsBySubMatchByUserByMatch($submatch['sub_match_id'], $user_id, $match['id']);
+            $match['match_submatch'][$skey]['bet'] = $bet;
+            $match['match_submatch'][$skey]['sub_match_detail'] = $sb;
+
+        }
+
+        $teams = [];
+
+        foreach($match['match_teams'] as $match_team) {
+            $mt = $this->team->show($match_team['team_id'])->toArray();
+            $odd = $this->submatch->getSingleOdds(1, $match['id'], $mt['id'])->toArray();
+
+            $mt['percentage'] = $odd['percentage'];
+            array_push($teams, $mt);
+        }
+
+        unset($match['match_teams']);
+        $match['teams'] = $teams;
+
+        return $this->common->returnSuccessWithData($match);
+    }
+
     public function getMatches(Request $request, $status)
     {
         $user = auth('api')->user();
