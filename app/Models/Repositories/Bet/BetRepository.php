@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Models\Repositories\Bet;
-
 
 use App\Models\Core\Bet;
 
@@ -20,7 +18,7 @@ class BetRepository implements BetRepositoryInterface
 
     public function updateBet($id, $data)
     {
-        return Bet::where('id', $id)->update($data);
+        return Bet::find($id)->update($data);
     }
 
     public function getBetsByMatch($match_id)
