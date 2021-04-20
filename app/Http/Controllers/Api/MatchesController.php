@@ -561,6 +561,7 @@ class MatchesController extends Controller
 
     public function endMatch(Request $request, $match_id)
     {
+        $match_status = 'settled';
         $status = $request->get('status');
 
         $round = $request->get('round');
@@ -583,6 +584,7 @@ class MatchesController extends Controller
         }
 
         if(count($request->get('is_draw_invalid')) > 0) {
+
             //process and refund bets
             foreach($request->get('is_draw_invalid') as $idi_submatch) {
                 $sub_match = $this->match->getSubmatchByMatchidSubmatchid($match_id, $idi_submatch['sub_match']);
@@ -592,6 +594,10 @@ class MatchesController extends Controller
                 $sub_data = [
                     'status' => $idi_submatch['definition']
                 ];
+
+                if($idi_submatch['sub_match'] == "1") {
+                    $match_status = $idi_submatch['definition'];
+                }
 
                 $this->match->updateMatchSubmatch($sub_match->id, $sub_data);
             }
@@ -620,9 +626,15 @@ class MatchesController extends Controller
                 $this->processWinner($match_id, $winner);
             }
 
+            $winners = $this->match->getMatchWinnerByMatch($match_id);
+
+            foreach($winners as $winner) {
+
+            }
+
             $match_data = [
                 'status_label' => 'Match ended',
-                'status' => 'settled',
+                'status' => $match_status,
                 'current_round' => null
             ];
 
