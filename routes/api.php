@@ -81,6 +81,8 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('my-predictions', 'Api\MatchesController@myPredictions');
 
         Route::get('leagues/{id}/teams', 'Api\LeagueController@getTeamsByLeague');
+
+        Route::get('matches/admin/bets', 'Api\MatchesController@adminGetBets');
     });
 
     Route::apiResource('game-types', 'Api\GameTypesController');

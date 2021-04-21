@@ -137,4 +137,8 @@ class MatchRepository implements MatchRepositoryInterface
                 ->limit(15)
                 ->get();
     }
+
+    public function getMatchWithSubmatch() {
+        return Match::with('matchSubmatch')->orderBy('created_at', 'desc')->get();
+    }
 }

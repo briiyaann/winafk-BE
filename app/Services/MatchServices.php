@@ -99,4 +99,9 @@ class MatchServices
     {
         return $this->match->getMatchWinnerByMatch($match_id);
     }
+
+    public function getMatchWithSubmatch()
+    {
+        return $this->match->getMatchWithSubmatch();
+    }
 }

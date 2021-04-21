@@ -776,4 +776,19 @@ class MatchesController extends Controller
 
         return $this->common->returnSuccessWithData($matches);
     }
+
+    public function adminGetBets()
+    {
+        $matches = $this->match->getMatchWithSubmatch()->toArray();
+
+        foreach($matches as $m_key => $match) {
+            foreach($match['match_submatch'] as $s_key => $submatch) {
+                $submatch = $this->submatch->show($submatch['sub_match_id']);
+
+                $matches[$m_key]['match_submatch'][$s_key]['submatch'] = $submatch;
+            }
+        }
+
+        return $this->common->returnSuccessWithData($matches);
+    }
 }

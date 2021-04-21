@@ -39,4 +39,6 @@ interface MatchRepositoryInterface
     public function updateMatchWinner($id, $data);
 
     public function getMatchWinnerByMatch($match_id);
+
+    public function getMatchWithSubmatch();
 }
