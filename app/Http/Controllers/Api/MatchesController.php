@@ -136,7 +136,7 @@ class MatchesController extends Controller
             foreach($submatch['odds'] as $okey => $odd) {
                 if(!$user) {
                     unset($match['match_submatch'][$skey]['odds'][$okey]->bets);
-                } else if($user && $user->user_role != 2) {
+                } else if($user && $user->user_role != 3) {
                     unset($match['match_submatch'][$skey]['odds'][$okey]->bets);
                 }
             }
