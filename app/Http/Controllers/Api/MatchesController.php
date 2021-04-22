@@ -134,7 +134,11 @@ class MatchesController extends Controller
         foreach($match['match_submatch'] as $skey => $submatch) {
             //remove bets from odds
             foreach($submatch['odds'] as $okey => $odd) {
-                unset($match['match_submatch'][$skey]['odds'][$okey]->bets);
+                if(!$user) {
+                    unset($match['match_submatch'][$skey]['odds'][$okey]->bets);
+                } else if($user && $user->user_role != 2) {
+                    unset($match['match_submatch'][$skey]['odds'][$okey]->bets);
+                }
             }
 
             $sb = $this->submatch->show($submatch['sub_match_id']);
