@@ -6,9 +6,9 @@ use App\Http\Controllers\CommonController;
 use App\Http\Controllers\Controller;
 use App\Mail\ForgotPassword;
 use App\Mail\VerifyUser;
+use App\Models\Core\User;
 use App\Services\UserSerivces;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -24,7 +24,7 @@ class UsersController extends Controller
     public function __construct(
         UserSerivces $user,
         CommonController $common
-    ){
+    ) {
         $this->user = $user;
         $this->common = $common;
     }
@@ -41,12 +41,13 @@ class UsersController extends Controller
             'birthday' => 'required',
             'username' => 'required|min:6|unique:users',
             'email' => 'required|unique:users|email',
-            'password' => 'required'
+            'password' => 'required',
+            'referralCode' => 'nullable|exists:users,referral_code'
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             $return_err = [];
             foreach ($validator->errors()->toArray() as $key => $value) {
                 $return_err[$key] = $value[0];
@@ -64,13 +65,16 @@ class UsersController extends Controller
                 'user_role' => 1,
                 'coins' => 0,
                 'verification_code' => Str::random(30),
-                'verification_created' => Carbon::now()
+                'verification_created' => Carbon::now(),
             ];
+
+            if ($request->has('referralCode')) {
+                $data['reference_id'] = optional(User::where('referral_code', $request->referralCode)->first())->id;
+            }
 
             $user = $this->user->addUser($data);
 
-            if($user->id) {
-
+            if ($user->id) {
                 Mail::to($user->email)->send(new VerifyUser($user));
 
                 return $this->common->returnSuccessWithData($user);
@@ -86,16 +90,16 @@ class UsersController extends Controller
     {
         $code = $request->get('code');
 
-        if(!$code) {
+        if (!$code) {
             return $this->common->createErrorMsg('code_error', 'Error code not found');
         } else {
             $user = $this->user->getUserByCode($code);
-            if($user) {
+            if ($user) {
                 $verification_timestamp = $user->verification_created;
 
                 $is_expired = Carbon::now()->diff(Carbon::parse($verification_timestamp));
 
-                if($is_expired->days == 0) {
+                if ($is_expired->days == 0) {
                     $update_user = [
                         'verification_code' => null,
                         'verification_created' => null,
@@ -114,21 +118,22 @@ class UsersController extends Controller
                 return $this->common->createErrorMsg('code_error', 'Invalid Error Code.');
             }
         }
-
     }
 
     public function forgotPassword(Request $request)
     {
         $email = $request->get('email');
 
-        if(!$email) return $this->common->createErrorMsg('no_email', 'Email not found');
+        if (!$email) {
+            return $this->common->createErrorMsg('no_email', 'Email not found');
+        }
 
         $user = $this->user->getUserByEmail($email);
 
-        if($user) {
+        if ($user) {
             $password_reset = $this->user->createPasswordReset($email);
 
-            if($password_reset) {
+            if ($password_reset) {
                 Mail::to($email)->send(new ForgotPassword($user, $password_reset));
 
                 return $this->common->returnSuccess();
@@ -142,7 +147,7 @@ class UsersController extends Controller
     {
         $password_reset = $this->user->getPasswordReset($token);
 
-        if($password_reset) {
+        if ($password_reset) {
             return $this->common->returnSuccessWithData($password_reset);
         } else {
             return $this->common->createErrorMsg('invalid_token', 'Token invalid');
@@ -158,7 +163,7 @@ class UsersController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             $return_err = [];
             foreach ($validator->errors()->toArray() as $key => $value) {
                 $return_err[$key] = $value[0];
@@ -166,9 +171,9 @@ class UsersController extends Controller
 
             return $this->common->returnWithErrors($return_err);
         } else {
-            $password_reset =  $this->user->getPasswordReset($request->get('token'));
+            $password_reset = $this->user->getPasswordReset($request->get('token'));
 
-            if($password_reset){
+            if ($password_reset) {
                 $user = $this->user->getUserByEmail($password_reset->email);
 
                 $new_password = bcrypt($request->get('password'));
@@ -192,7 +197,7 @@ class UsersController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             $return_err = [];
             foreach ($validator->errors()->toArray() as $key => $value) {
                 $return_err[$key] = $value[0];
@@ -200,10 +205,12 @@ class UsersController extends Controller
 
             return $this->common->returnWithErrors($return_err);
         } else {
-            if(Auth::attempt(['username' => $request->get('username'), 'password' => $request->get('password')])) {
+            if (Auth::attempt(['username' => $request->get('username'), 'password' => $request->get('password')])) {
                 $user = Auth::user();
 
-                if(!$user->email_verified_at) return $this->common->createErrorMsg('invalid', 'Please verify your account first.');
+                if (!$user->email_verified_at) {
+                    return $this->common->createErrorMsg('invalid', 'Please verify your account first.');
+                }
 
                 $user_arr = [
                     'email' => $user->email,
@@ -215,6 +222,11 @@ class UsersController extends Controller
                     'username' => $user->username,
                     'id' => $user->id,
                     'afkcoins' => $user->coins,
+                    'referralCode' => $user->referral_code,
+                    'reference' => $user->reference ? $user->reference->toArray() : null,
+                    'referralPoints' => $user->referral_points,
+                    'approvedReferralCode' => $user->approved_referral_code,
+                    'userType' => $user->userType ? $user->userType->toArray() : null,
                 ];
                 $return = [
                     'token' => $user->createToken('winAFK')->accessToken,
@@ -226,7 +238,6 @@ class UsersController extends Controller
                 return $this->common->createErrorMsg('invalid', 'Invalid username and password');
             }
         }
-
     }
 
     public function getUser($id)
@@ -245,7 +256,7 @@ class UsersController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             $return_err = [];
             foreach ($validator->errors()->toArray() as $key => $value) {
                 $return_err[$key] = $value[0];
@@ -254,7 +265,7 @@ class UsersController extends Controller
             return $this->common->returnWithErrors($return_err);
         } else {
             $user = $this->user->getUserByEmail($request->get('email'));
-            if($user){
+            if ($user) {
                 $new_password = bcrypt($request->get('password'));
 
                 $update = $this->user->updateUser($user->id, ['password' => $new_password]);
@@ -266,18 +277,21 @@ class UsersController extends Controller
         }
     }
 
-    public function getCoins($id) {
+    public function getCoins($id)
+    {
         $user = $this->user->findUser($id);
 
-        return $this->common->returnSuccessWithData(['coins' => $user->coins]);
+        return $this->common->returnSuccessWithData([
+            'coins' => $user->coins,
+            'referralPoints' => $user->referral_points,
+        ]);
     }
 
     public function logout()
     {
-        if(Auth::check()) {
+        if (Auth::check()) {
             Auth::user()->token()->revoke();
             return $this->common->returnSuccess();
         }
     }
-
 }
