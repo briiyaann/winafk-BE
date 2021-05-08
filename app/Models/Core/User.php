@@ -51,17 +51,18 @@ class User extends Authenticatable
      */
     protected static function booted()
     {
-        static::created(function ($user) {
-            // Generate a unique referral code when creating a new user.
-            $user->generateReferralCode();
-
-            // Assign a default userType
-            $userType = UserType::all();
-            if ($userType->count()) {
-                $user->userType()->associate($userType->first());
-                $user->save();
-            }
-        });
+        //TODO: disabled, referral code will be manually added by admin
+//        static::created(function ($user) {
+//            // Generate a unique referral code when creating a new user.
+//            $user->generateReferralCode();
+//
+//            // Assign a default userType
+//            $userType = UserType::all();
+//            if ($userType->count()) {
+//                $user->userType()->associate($userType->first());
+//                $user->save();
+//            }
+//        });
     }
 
     public function topups()
@@ -74,17 +75,17 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Core\Withdraw');
     }
 
-    public function reference(): BelongsTo
+    public function reference()
     {
         return $this->belongsTo(User::class, 'reference_id', 'id');
     }
 
-    public function referrals(): HasMany
+    public function referrals()
     {
         return $this->hasMany(User::class, 'reference_id', 'id');
     }
 
-    public function userType(): BelongsTo
+    public function userType()
     {
         return $this->belongsTo(UserType::class);
     }
@@ -97,7 +98,7 @@ class User extends Authenticatable
         });
     }
 
-    public function referralPointLogs(): HasMany
+    public function referralPointLogs()
     {
         return $this->hasMany(ReferralPointLog::class);
     }
