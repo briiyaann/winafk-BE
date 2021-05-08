@@ -89,7 +89,7 @@ class WithdrawsController extends Controller
         $withdraw = $this->withdraw->getWithdraw($id);
         if(!$withdraw) return $this->common->createErrorMsg('api_arror', 'Withdrawal information not found');
 
-        $user = $this->user->findUser($id);
+        $user = $this->user->findUser($withdraw->user_id);
 
         if($request->get('status') === 'approved') {
             if(!$request->file('receipt')) return $this->common->createErrorMsg('api_error', 'Receipt is required');
