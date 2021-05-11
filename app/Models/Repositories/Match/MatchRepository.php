@@ -45,14 +45,14 @@ class MatchRepository implements MatchRepositoryInterface
                 ->with('league')
                 ->with('matchSubmatch')
                 ->with('matchTeams')
-                ->orderBy('updated_at', 'desc')
+                ->orderBy('schedule', 'asc')
                 ->get();
         } else {
             return Match::with('matchSubmatch')
                 ->where('status', $status)
                 ->with('league')
                 ->with('matchTeams')
-                ->orderBy('updated_at', 'desc')
+                ->orderBy('schedule', 'asc')
                 ->get();
         }
     }
