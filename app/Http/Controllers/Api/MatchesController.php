@@ -128,7 +128,12 @@ class MatchesController extends Controller
     public function getMatch($id)
     {
         $user = auth('api')->user();
-        $match = $this->match->findMatch($id)->toArray();
+        $match = $this->match->findMatch($id);
+        if($match) {
+            $match = $match->toArray();
+        } else {
+            return $this->common->createErrorMsg('no_match', 'Match not found.');
+        }
         $user_id = $user ? $user->id : null;
 
         foreach($match['match_submatch'] as $skey => $submatch) {
@@ -376,7 +381,7 @@ class MatchesController extends Controller
 
             $bet = $this->bet->findBet($bet->id);
 
-            $coins = $coins + intval($bet->amount);
+            $coins = $coins + floatval($bet->amount);
 
             $user_data = [
                 'coins' => $coins
@@ -395,11 +400,11 @@ class MatchesController extends Controller
             if($update) {
                 $odd = $this->submatch->getSingleOdds($bet->sub_match_id, $match->id , $bet->team_id);
 
-                $odd_bet = intval($odd->bets);
+                $odd_bet = floatval($odd->bets);
 
                 $odd_bet = $odd_bet - $bet->amount;
 
-                $this->submatch->updateOdds(['bets' => intval($odd_bet)], $odd->id);
+                $this->submatch->updateOdds(['bets' => floatval($odd_bet)], $odd->id);
 
                 //update odds
                 $this->submatch->calculateOdds($sub_data);
@@ -505,7 +510,7 @@ class MatchesController extends Controller
             $user = $this->user->findUser($user_id);
 
             if($user) {
-                $cur_amount = intval($user->coins);
+                $cur_amount = floatval($user->coins);
                 $update_data = [
                     'coins' => $cur_amount + $amount
                 ];
@@ -657,7 +662,7 @@ class MatchesController extends Controller
             $amount = $bet->amount;
             $odds = $bet->odds->odds;
 
-            $payout = intval($amount) * intval($odds);
+            $payout = floatval($amount) * floatval($odds);
 
             $user = $this->user->findUser($bet->user_id);
 
