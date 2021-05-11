@@ -33,6 +33,9 @@ class TeamRepository implements TeamRepositoryInterface
         return Team::where('id', $id)->update($data);
     }
 
-
+    public function getTeamByGameType($id)
+    {
+        return Team::where('game_type_id', $id)->get();
+    }
 
 }

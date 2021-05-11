@@ -40,4 +40,9 @@ class TeamServices
     {
         return $this->team->delete($id);
     }
+
+    public function getTeamByGameType($id)
+    {
+        return $this->team->getTeamByGameType($id);
+    }
 }

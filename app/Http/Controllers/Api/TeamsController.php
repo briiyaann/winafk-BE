@@ -145,4 +145,11 @@ class TeamsController extends Controller
             return $this->common->createErrorMsg('no_team', 'Team not found');
         }
     }
+
+    public function getTeamByGameType($game_type_id)
+    {
+        $teams = $this->team->getTeamByGameType($game_type_id);
+
+        return $this->common->returnSuccessWithData($teams);
+    }
 }

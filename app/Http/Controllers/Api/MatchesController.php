@@ -579,17 +579,20 @@ class MatchesController extends Controller
 
         $winners = $request->get('winner');
         $match_winner = $this->match->getMatchWinner($match_id, $request->get('team_winner'));
-        // add match winner
-        $match_winner_data = [
-            'match_id' => $match_id,
-            'score' => $match_winner ? intval($match_winner->score) + 1 : 1,
-            'team_id' => $request->get('team_winner')
-        ];
 
-        if($match_winner) {
-            $this->match->updateMatchWinner($match_winner->id, $match_winner_data);
-        } else {
-            $this->match->addMatchRoundWinner($match_winner_data);
+        if(!$request->get('is_invalid_round')) {
+            // add match winner
+            $match_winner_data = [
+                'match_id' => $match_id,
+                'score' => $match_winner ? intval($match_winner->score) + 1 : 1,
+                'team_id' => $request->get('team_winner')
+            ];
+
+            if($match_winner) {
+                $this->match->updateMatchWinner($match_winner->id, $match_winner_data);
+            } else {
+                $this->match->addMatchRoundWinner($match_winner_data);
+            }
         }
 
         if(count($request->get('is_draw_invalid')) > 0) {
