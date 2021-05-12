@@ -64,12 +64,12 @@ class Bet extends Model
             ->first();
     }
 
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function referralPointLog(): HasOne
+    public function referralPointLog()
     {
         return $this->hasOne(ReferralPointLog::class);
     }

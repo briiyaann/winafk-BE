@@ -17,12 +17,12 @@ class ReferralPointLog extends Model
         'points' => 'decimal:4'
     ];
 
-    public function reference(): BelongsTo
+    public function reference()
     {
         return $this->belongsTo(User::class, 'reference_id', 'id');
     }
 
-    public function bet(): BelongsTo
+    public function bet()
     {
         return $this->belongsTo(Bet::class);
     }

@@ -133,6 +133,7 @@ class MatchRepository implements MatchRepositoryInterface
     {
         return Match::where('status', 'settled')
                 ->with('game_type')
+                ->with('matchSubmatch')
                 ->orderBy('updated_at', 'desc')
                 ->limit(15)
                 ->get();

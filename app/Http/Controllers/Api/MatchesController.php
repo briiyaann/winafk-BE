@@ -578,21 +578,43 @@ class MatchesController extends Controller
         if(!$round) return $this->common->createErrorMsg('round', 'Match round is required.');
 
         $winners = $request->get('winner');
-        $match_winner = $this->match->getMatchWinner($match_id, $request->get('team_winner'));
 
         if(!$request->get('is_invalid_round')) {
-            // add match winner
-            $match_winner_data = [
-                'match_id' => $match_id,
-                'score' => $match_winner ? intval($match_winner->score) + 1 : 1,
-                'team_id' => $request->get('team_winner')
-            ];
+            $scores = $request->get('team_scores');
 
-            if($match_winner) {
-                $this->match->updateMatchWinner($match_winner->id, $match_winner_data);
+            if($scores) {
+                foreach($scores as $score) {
+                    $match_winner = $this->match->getMatchWinner($match_id, $score['team_id']);
+
+                    // add match winner
+                    $match_winner_data = [
+                        'match_id' => $match_id,
+                        'score' => $score['score'],
+                        'team_id' => $score['team_id']
+                    ];
+
+                    if($match_winner) {
+                        $this->match->updateMatchWinner($match_winner->id, $match_winner_data);
+                    } else {
+                        $this->match->addMatchRoundWinner($match_winner_data);
+                    }
+                }
             } else {
-                $this->match->addMatchRoundWinner($match_winner_data);
+                $match_winner = $this->match->getMatchWinner($match_id, $request->get('team_winner'));
+                // add match winner
+                $match_winner_data = [
+                    'match_id' => $match_id,
+                    'score' => $match_winner ? intval($match_winner->score) + 1 : 1,
+                    'team_id' => $request->get('team_winner')
+                ];
+
+                if($match_winner) {
+                    $this->match->updateMatchWinner($match_winner->id, $match_winner_data);
+                } else {
+                    $this->match->addMatchRoundWinner($match_winner_data);
+                }
             }
+
         }
 
         if(count($request->get('is_draw_invalid')) > 0) {
@@ -638,11 +660,7 @@ class MatchesController extends Controller
                 $this->processWinner($match_id, $winner);
             }
 
-            $winners = $this->match->getMatchWinnerByMatch($match_id);
-
-            foreach($winners as $winner) {
-
-            }
+            $this->match->getMatchWinnerByMatch($match_id);
 
             $match_data = [
                 'status_label' => 'Match ended',
@@ -782,6 +800,12 @@ class MatchesController extends Controller
 
         foreach($matches as $key => $match) {
             $results = $this->match->getMatchWinnerByMatch($match['id']);
+
+            foreach($match['match_submatch'] as $submatch) {
+                if($submatch['sub_match_id'] == 1) {
+                    $matches[$key]['team_winner'] = $submatch['team_winner'];
+                }
+            }
 
             $matches[$key]['scores'] = $results;
         }
