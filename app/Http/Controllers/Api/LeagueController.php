@@ -153,11 +153,73 @@ class LeagueController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function update(Request $request, $id)
     {
-        //
+        $rules = [
+            'name' => 'required',
+            'fee' => 'required',
+            'background' => 'required|mimes:jpg,jpeg,gif,png',
+            'banner' => 'required|mimes:jpg,jpeg,gif,png',
+            'description' => 'required',
+            'game_type_id' => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            $return_err = [];
+            foreach ($validator->errors()->toArray() as $key => $value) {
+                $return_err[$key] = $value[0];
+            }
+
+            return $this->common->returnWithErrors($return_err);
+        } else {
+            $teams = $request->get('teams');
+
+            if(!$teams) return $this->common->createErrorMsg('teams', 'Please select teams.');
+
+            if(count($teams) <= 1) return $this->common->createErrorMsg('teams', 'Pleas select two or more teams.');
+
+            if($request->file('background') && $request->file('banner')) {
+                $upload_folder_background = 'leagues/background';
+                $upload_folder_banner = 'leagues/banner';
+                $background = $request->file('background');
+                $banner = $request->file('banner');
+                $background_path = $background->store($upload_folder_background, 'public');
+                $banner_path = $banner->store($upload_folder_banner, 'public');
+
+                $data = [
+                    'name' => $request->get('name'),
+                    'fee' => intval($request->get('fee')),
+                    'background' => $background_path,
+                    'banner' => $banner_path,
+                    'game_type_id' => intval($request->get('game_type_id')),
+                    'description' => $request->get('description')
+                ];
+
+                $league = $this->league->store($data);
+
+                if($league->id) {
+                    //add teams
+                    foreach ($teams as $team)
+                    {
+                        $league_team_data = [
+                            'league_id' => $league->id,
+                            'team_id' => $team
+                        ];
+
+                        $league_team = $this->league->storeLeagueTeam($league_team_data);
+                    }
+                }
+            }
+
+            //get league with team
+            $get_league_team = $this->league->getLeaguewithTeam($league->id);
+
+            return $this->common->returnSuccessWithData($get_league_team);
+        }
     }
 
     /**

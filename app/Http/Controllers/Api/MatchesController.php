@@ -758,7 +758,8 @@ class MatchesController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'schedule' => 'required'
+            'schedule' => 'required',
+            'name' => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -772,7 +773,8 @@ class MatchesController extends Controller
             return $this->common->returnWithErrors($return_err);
         } else {
             $edit_data = [
-                'schedule'=> \DateTime::createFromFormat('D M d Y H:i:s e+', $request->get('schedule'))
+                'schedule'=> \DateTime::createFromFormat('D M d Y H:i:s e+', $request->get('schedule')),
+                'name' => $request->get('name')
             ];
 
             $update = $this->match->updateMatch($id, $edit_data);
