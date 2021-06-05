@@ -85,9 +85,9 @@ class BetsController extends Controller
 
             foreach ($submatches as $submatch)
             {
-                $submatch = $this->match->showMatchSubmatch($submatch['submatch']);
+                $_submatch = $this->match->showMatchSubmatch($submatch['submatch'], $match_id);
 
-                if($submatch->status != 'open') {
+                if($_submatch->status != 'open') {
                     return $this->common->createErrorMsg('bets_saved', 'Cannot bet on an ongoing submatch');
                 }
 
