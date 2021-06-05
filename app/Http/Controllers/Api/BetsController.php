@@ -82,13 +82,15 @@ class BetsController extends Controller
             $coins = $user_details->coins;
             $did_escape = false;
             $saved_count = 0;
+            $has_ongoing_error = false;
 
             foreach ($submatches as $submatch)
             {
                 $_submatch = $this->match->showMatchSubmatch($submatch['submatch'], $match_id);
 
                 if($_submatch->status != 'open') {
-                    return $this->common->createErrorMsg('bets_saved', 'Cannot bet on an ongoing submatch');
+                    $has_ongoing_error = true;
+                    continue;
                 }
 
                 $sub_data = [
