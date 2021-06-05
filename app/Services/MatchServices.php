@@ -75,6 +75,10 @@ class MatchServices
         return $this->match->addMatchRoundWinner($data);
     }
 
+    public function showMatchSubmatch($id) {
+        return $this->match->showMatchSubmatch($id);
+    }
+
     public function getMatchByMatchIds($match_ids)
     {
         return $this->match->getMatchByMatchIds($match_ids);

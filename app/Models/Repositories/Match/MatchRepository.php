@@ -57,6 +57,11 @@ class MatchRepository implements MatchRepositoryInterface
         }
     }
 
+    public function showMatchSubmatch($id)
+    {
+        return MatchSubmatch::find($id);
+    }
+
     public function addMatchTeam($data)
     {
         return MatchTeam::create($data);

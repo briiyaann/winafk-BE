@@ -75,7 +75,6 @@ class BetsController extends Controller
             $match_id = $request->get('match_id');
             $match = $this->match->getMatch($match_id);
             if(!$match) return $this->common->createErrorMsg('no_match', 'Match does not exist.');
-            if($match->status != 'upcoming') return $this->common->createErrorMsg('bets_saved', 'Cannot bet when the match is not upcoming');
 
             $submatches = $request->get('sub_match');
             $user_details = $this->user->findUser($request->get('user_id'));
@@ -86,6 +85,12 @@ class BetsController extends Controller
 
             foreach ($submatches as $submatch)
             {
+                $submatch = $this->match->showMatchSubmatch($submatch['submatch']);
+
+                if($submatch->status != 'open') {
+                    return $this->common->createErrorMsg('bets_saved', 'Cannot bet on an ongoing submatch');
+                }
+
                 $sub_data = [
                     'user_id' => $request->get('user_id'),
                     'match_id' => $request->get('match_id'),

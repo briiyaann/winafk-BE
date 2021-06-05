@@ -14,6 +14,8 @@ interface MatchRepositoryInterface
 
     public function getListByStatus($param, $status);
 
+    public function showMatchSubmatch($id);
+
     public function addMatchTeam($data);
 
     public function addMatchSubMatch($data);
