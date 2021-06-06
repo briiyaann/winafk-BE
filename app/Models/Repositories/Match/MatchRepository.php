@@ -139,6 +139,7 @@ class MatchRepository implements MatchRepositoryInterface
     public function getSettledMatches()
     {
         return Match::where('status', 'settled')
+                ->orWhere('status', 'draw')
                 ->with('game_type')
                 ->with('matchSubmatch')
                 ->orderBy('updated_at', 'desc')
