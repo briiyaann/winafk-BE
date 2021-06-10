@@ -94,4 +94,6 @@ Route::group(['prefix' => 'v1'], function() {
     Route::get('matches/{id}/get-submatches', 'Api\MatchesController@getSubmatches');
 
     Route::get('recent-matches', 'Api\MatchesController@recentMatches');
+
+    Route::get('user/referral/{reference}', 'Api\UsersController@checkReference');
 });

@@ -68,4 +68,8 @@ class UserSerivces
         return $this->user->findMMUsers();
     }
 
+    public function checkRefenrence($reference) {
+        return $this->user->checkRefenrence($reference);
+    }
+
 }

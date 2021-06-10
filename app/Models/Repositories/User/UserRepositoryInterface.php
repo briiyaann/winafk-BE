@@ -27,4 +27,6 @@ interface UserRepositoryInterface
     public function findUser($id);
 
     public function findMMUsers();
+
+    public function checkRefenrence($reference);
 }

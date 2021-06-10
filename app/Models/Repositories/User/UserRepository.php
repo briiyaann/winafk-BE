@@ -58,6 +58,11 @@ class UserRepository implements UserRepositoryInterface
         return User::find($id);
     }
 
+    public function checkRefenrence($reference)
+    {
+        return User::where('referral_code', $reference)->where('approved_referral_code', 1)->first();
+    }
+
     public function findMMUsers()
     {
         return User::where('user_role', 3)->get();

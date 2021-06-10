@@ -287,6 +287,13 @@ class UsersController extends Controller
         ]);
     }
 
+    public function checkReference($reference)
+    {
+        $referral = $this->user->checkRefenrence($reference);
+
+        return $this->common->returnSuccessWithData($referral);
+    }
+
     public function logout()
     {
         if (Auth::check()) {
