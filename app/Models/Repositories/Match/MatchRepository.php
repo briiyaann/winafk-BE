@@ -23,6 +23,11 @@ class MatchRepository implements MatchRepositoryInterface
 
     }
 
+    public function getActiveMatches()
+    {
+        return Match::whereIn('status', ['ongoing', 'upcoming'])->with('matchSubmatch')->with('league')->with('matchTeams')->get();
+    }
+
     public function getListByUser($user_id)
     {
 //        return Match::where('')

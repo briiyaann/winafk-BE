@@ -53,7 +53,7 @@ class MatchesController extends Controller
     public function index(Request $request)
     {
 
-        $matches = $this->match->getList();
+        $matches = $this->match->getActiveMatches();
 
         foreach ($matches as $key => $match)
         {

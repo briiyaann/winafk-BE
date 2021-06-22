@@ -26,6 +26,11 @@ class MatchServices
         return $this->match->getList();
     }
 
+    public function getActiveMatches()
+    {
+        return $this->match->getActiveMatches();
+    }
+
     public function findMatch($id)
     {
         return $this->match->findMatch($id);

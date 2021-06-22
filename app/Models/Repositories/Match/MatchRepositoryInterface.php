@@ -43,4 +43,6 @@ interface MatchRepositoryInterface
     public function getMatchWinnerByMatch($match_id);
 
     public function getMatchWithSubmatch();
+
+    public function getActiveMatches();
 }
