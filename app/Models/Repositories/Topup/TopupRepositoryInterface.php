@@ -17,4 +17,6 @@ interface TopupRepositoryInterface
     public function getAll();
 
     public function getTopup($id);
+
+    public function getRecentDeposit($filter);
 }

@@ -10,5 +10,8 @@ return [
     ],
     'withdraw' => [
         'update' => ['2']
+    ],
+    'report' => [
+        'get' => ['2']
     ]
 ];

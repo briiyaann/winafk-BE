@@ -46,4 +46,9 @@ class TopupServices
     {
         return $this->topup->getTopup($id);
     }
+
+    public function getRecentDeposit($filter)
+    {
+        return $this->topup->getRecentDeposit($filter);
+    }
 }

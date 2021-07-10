@@ -3,6 +3,7 @@
 namespace App\Models\Core;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Withdraw extends Model
 {
@@ -13,12 +14,21 @@ class Withdraw extends Model
         'email',
         'status',
         'reason',
-        'approve_by',
+        'approved_by',
         'receipt'
     ];
+
+    protected $appends = ['approved'];
 
     public function user()
     {
         return $this->belongsTo('App\Models\Core\User');
+    }
+
+    public function getApprovedAttribute()
+    {
+        return DB::table('users')
+                ->where('id', $this->approved_by)
+                ->first();
     }
 }

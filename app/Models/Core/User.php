@@ -33,6 +33,8 @@ class User extends Authenticatable
         'password', 'remember_token'
     ];
 
+    protected $appends = ['full'];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -63,6 +65,11 @@ class User extends Authenticatable
 //                $user->save();
 //            }
 //        });
+    }
+
+    public function getFullAttribute()
+    {
+        return $this->firstname . ' ' . $this->lastname;
     }
 
     public function topups()

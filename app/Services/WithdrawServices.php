@@ -45,4 +45,8 @@ class WithdrawServices
     {
         return $this->withdraw->getWithdraw($id);
     }
+
+    public function getRecentWithdraw($filter) {
+        return $this->withdraw->getRecentWithdraw($filter);
+    }
 }

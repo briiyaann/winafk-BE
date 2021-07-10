@@ -17,4 +17,6 @@ interface WithdrawRepositoryInterface
     public function getAll();
 
     public function getWithdraw($id);
+
+    public function getRecentWithdraw($filter);
 }
