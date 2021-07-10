@@ -62,6 +62,7 @@ class WithdrawRepository implements WithdrawRepositoryInterface
             case 'month':
                 return Withdraw::whereMonth('created_at', date('m'))
                         ->whereYear('created_at', date('Y'))
+                        ->where('status', 'approved')
                         ->with('user')
                         ->orderBy('created_at', 'desc')
                         ->get();
