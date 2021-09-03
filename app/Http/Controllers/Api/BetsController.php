@@ -74,7 +74,7 @@ class BetsController extends Controller
             //check if match existed
             $match_id = $request->get('match_id');
             $match = $this->match->getMatch($match_id);
-            if(!$match) return $this->common->createErrorMsg('no_match', 'Match does not exist.');
+            if(!$match) return $this->common->createErrorMsg('no_match', 'Game does not exist.');
 
             $submatches = $request->get('sub_match');
             $user_details = $this->user->findUser($request->get('user_id'));

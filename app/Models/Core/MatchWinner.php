@@ -12,4 +12,9 @@ class MatchWinner extends Model
     {
         return $this->belongsTo('App\Models\Core\Team');
     }
+
+    public function matches()
+    {
+        return $this->belongsTo('App\Models\Core\Game', 'match_id');
+    }
 }

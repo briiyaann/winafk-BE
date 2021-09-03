@@ -132,7 +132,7 @@ class MatchesController extends Controller
         if($match) {
             $match = $match->toArray();
         } else {
-            return $this->common->createErrorMsg('no_match', 'Match not found.');
+            return $this->common->createErrorMsg('no_match', 'Game not found.');
         }
         $user_id = $user ? $user->id : null;
 
@@ -418,7 +418,7 @@ class MatchesController extends Controller
 
         //require round number before starting the match
         $round = $request->get('round');
-        if(!$match) return $this->common->createErrorMsg('no_match', 'Match not found');
+        if(!$match) return $this->common->createErrorMsg('no_match', 'Game not found');
 
         //remove bets from mm
         $mm_users = $this->user->findMMUsers();
@@ -575,7 +575,7 @@ class MatchesController extends Controller
 
         $round = $request->get('round');
 
-        if(!$round) return $this->common->createErrorMsg('round', 'Match round is required.');
+        if(!$round) return $this->common->createErrorMsg('round', 'Game round is required.');
 
         $winners = $request->get('winner');
 
@@ -663,7 +663,7 @@ class MatchesController extends Controller
             $this->match->getMatchWinnerByMatch($match_id);
 
             $match_data = [
-                'status_label' => 'Match ended',
+                'status_label' => 'Game ended',
                 'status' => $match_status,
                 'current_round' => null
             ];

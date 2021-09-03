@@ -25,6 +25,11 @@ class Withdraw extends Model
         return $this->belongsTo('App\Models\Core\User');
     }
 
+    public function user_relate()
+    {
+        return $this->belongsTo('App\Models\Core\User');
+    }
+
     public function getApprovedAttribute()
     {
         return DB::table('users')

@@ -10,6 +10,6 @@ class MatchTeam extends Model
 
     public function matches()
     {
-        return $this->belongsTo('App\Models\Core\Match');
+        return $this->belongsTo('App\Models\Core\Game', 'match_id');
     }
 }

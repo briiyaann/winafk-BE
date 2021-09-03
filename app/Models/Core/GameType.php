@@ -16,13 +16,8 @@ class GameType extends Model
         return $this->hasMany('App\Models\Core\Team');
     }
 
-    public function league()
-    {
-        return $this->belongsTo('App\Models\Core\League', 'game_type_id');
-    }
-
     public function matches()
     {
-        return $this->hasMany('App\Models\Core\Match');
+        return $this->hasMany('App\Models\Core\Game', 'match_id');
     }
 }

@@ -15,11 +15,11 @@ class League extends Model
 
     public function leagueGameType()
     {
-        return $this->hasOne('App\Models\Core\GameType', 'id');
+        return $this->belongsTo('App\Models\Core\GameType', 'game_type_id');
     }
 
     public function matches()
     {
-        return $this->hasMany('App\Models\Core\Match');
+        return $this->hasMany('App\Models\Core\Game', 'match_id');
     }
 }
