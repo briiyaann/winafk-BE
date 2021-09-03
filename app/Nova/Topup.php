@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
@@ -52,12 +53,10 @@ class Topup extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            SearchableSelect::make('User', 'user_id')
-                ->resource('users')
-                ->hideFromIndex()
-                ->label('email')
-                ->value('id')
-                ->required(),
+            BelongsTo::make('User ID', 'user', 'App\Nova\User')
+                ->nullable()
+                ->hideFromDetail()
+                ->withoutTrashed(),
             AdvancedNumber::make('Amount')
                 ->prefix('₱')
                 ->thousandsSeparator(',')
@@ -92,8 +91,13 @@ class Topup extends Resource
             Textarea::make('reason')
                 ->hideFromIndex()
                 ->rules('required_if:status,denied'),
-            BelongsTo::make('Approved By', 'user', 'App\Nova\User')
+            Text::make('Approved By')
+                ->hideWhenUpdating()
+                ->hideWhenCreating(),
+            BelongsTo::make('Approved By', 'user_approved', 'App\Nova\User')
                 ->nullable()
+                ->hideFromDetail()
+                ->searchable()
                 ->display(function($user) {
                     return $user->firstname . ' ' . $user->lastname;
                 })
@@ -164,8 +168,8 @@ class Topup extends Resource
         return __('Cashin');
     }
 
-    public static function relatableUsers(NovaRequest $request, $query)
+    public static function authorizedToCreate(Request $request)
     {
-        return $query->where('user_role', 2);
+        return false;
     }
 }

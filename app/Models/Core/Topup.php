@@ -16,6 +16,11 @@ class Topup extends Model
         return $this->belongsTo('App\Models\Core\User');
     }
 
+    public function user_approved()
+    {
+        return $this->belongsTo('App\Models\Core\User', 'approved_by');
+    }
+
     public function getApprovedAttribute()
     {
         return DB::table('users')

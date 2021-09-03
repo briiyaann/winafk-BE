@@ -79,7 +79,7 @@ class User extends Authenticatable
 
     public function withdraws()
     {
-        return $this->hasMany('App\Models\Core\Withdraw');
+        return $this->hasMany('App\Models\Core\Withdraw' );
     }
 
     public function reference()

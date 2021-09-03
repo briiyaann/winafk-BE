@@ -48,12 +48,10 @@ class Withdraw extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            SearchableSelect::make('User', 'user_id')
-                ->resource('users')
-                ->hideFromIndex()
-                ->label('email')
-                ->value('id')
-                ->required(),
+            BelongsTo::make('User ID', 'user', 'App\Nova\User')
+                ->nullable()
+                ->hideFromDetail()
+                ->withoutTrashed(),
             AdvancedNumber::make('Amount')
                 ->sortable()
                 ->thousandsSeparator(',')
@@ -77,8 +75,13 @@ class Withdraw extends Resource
                     'denied'    => 'Denied',
                     'approved'  => 'Approved'
                 ]),
-            BelongsTo::make('Approved By', 'user', 'App\Nova\User')
+            Text::make('Approved By')
+                ->hideWhenUpdating()
+                ->hideWhenCreating(),
+            BelongsTo::make('Approved By', 'user_approved', 'App\Nova\User')
                 ->nullable()
+                ->searchable()
+                ->hideFromDetail()
                 ->display(function($user) {
                     return $user->firstname . ' ' . $user->lastname;
                 })
@@ -143,6 +146,12 @@ class Withdraw extends Resource
         return __('Cashouts');
     }
 
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
+
+
     /**
      * Singular resource label
      */
@@ -150,10 +159,5 @@ class Withdraw extends Resource
     public static function singularLabel()
     {
         return __('Cashout');
-    }
-
-    public static function relatableUsers(NovaRequest $request, $query)
-    {
-        return $query->where('user_role', 2);
     }
 }
