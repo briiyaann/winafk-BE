@@ -102,7 +102,9 @@ class Game extends Resource
                 ->hideFromDetail()
                 ->hideWhenCreating()
                 ->help('Please do not edit if necessary.'),
+            HasMany::make('Match Submatches', 'matchSubmatch', 'App\Nova\MatchSubmatch'),
             HasMany::make('Match Winners')
+
         ];
     }
 

@@ -11,11 +11,20 @@ class MatchSubmatch extends Model
 
     protected $fillable = ['match_id', 'sub_match_id', 'round'];
 
-    protected $appends = ['odds'];
+    protected $appends = ['odds', 'bets'];
 
     public function matches()
     {
         return $this->belongsTo('App\Models\Core\Game', 'match_id');
+    }
+
+    public function team() {
+        return $this->belongsTo('App\Models\Core\Team', 'team_winner');
+    }
+
+    public function game()
+    {
+        return $this->belongsTo('App\Models\Core\Game', 'id');
     }
 
     public function getOddsAttribute()

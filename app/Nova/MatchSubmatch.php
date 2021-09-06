@@ -6,17 +6,17 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Status;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class MatchWinner extends Resource
+class MatchSubmatch extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\Core\MatchWinner::class;
+    public static $model = \App\Models\Core\MatchSubmatch::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -44,20 +44,28 @@ class MatchWinner extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Number::make('score'),
             BelongsTo::make('Match', 'matches', 'App\Nova\Game')
                 ->required()
                 ->hideWhenUpdating()
-                ->display(function($game_type) {
-                    return $game_type->id . ' - ' . $game_type->name;
+                ->display(function($game) {
+                    return $game->id . ' - ' . $game->name;
                 })
                 ->withoutTrashed(),
-            BelongsTo::make('Team', 'team', 'App\Nova\Team')
-                ->required()
+            Number::make('round')
+                ->hideFromDetail()
                 ->hideWhenUpdating()
-                ->display(function($game_type) {
-                    return $game_type->id . ' - ' . $game_type->name;
-                })
+                ->sortable(),
+            Select::make('status')
+                ->sortable()
+                ->required()
+                ->options([
+                    'open'      => 'Open',
+                    'settled'   => 'Settled',
+                    'ongoing'   => 'Ongoing',
+                    'invalid'   => 'Invalid',
+                    'draw'      => 'Draw'
+                ]),
+            BelongsTo::make('Team Winner', 'team', 'App\Nova\Team')
                 ->withoutTrashed(),
         ];
     }
@@ -106,10 +114,10 @@ class MatchWinner extends Resource
         return [];
     }
 
-    public static $displayInNavigation = false;
-
     public static function authorizedToCreate(Request $request)
     {
         return false;
     }
+
+    public static $displayInNavigation = false;
 }

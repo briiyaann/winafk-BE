@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Status;
@@ -75,9 +76,6 @@ class Withdraw extends Resource
                     'denied'    => 'Denied',
                     'approved'  => 'Approved'
                 ]),
-            Text::make('Approved By')
-                ->hideWhenUpdating()
-                ->hideWhenCreating(),
             BelongsTo::make('Approved By', 'user_approved', 'App\Nova\User')
                 ->nullable()
                 ->searchable()
@@ -88,7 +86,15 @@ class Withdraw extends Resource
                 ->withoutTrashed(),
             Textarea::make('reason')
                 ->hideFromIndex()
-                ->rules('required_if:status,denied')
+                ->rules('required_if:status,denied'),
+            DateTime::make('Updated At')
+                ->format('MMM DD, GGGG hh:mm:ss A')
+                ->hideWhenUpdating()
+                ->hideWhenCreating(),
+            DateTime::make('Created At')
+                ->format('MMM DD, GGGG hh:mm:ss A')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
         ];
     }
 

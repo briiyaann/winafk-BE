@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
@@ -91,9 +92,6 @@ class Topup extends Resource
             Textarea::make('reason')
                 ->hideFromIndex()
                 ->rules('required_if:status,denied'),
-            Text::make('Approved By')
-                ->hideWhenUpdating()
-                ->hideWhenCreating(),
             BelongsTo::make('Approved By', 'user_approved', 'App\Nova\User')
                 ->nullable()
                 ->hideFromDetail()
@@ -102,6 +100,14 @@ class Topup extends Resource
                     return $user->firstname . ' ' . $user->lastname;
                 })
                 ->withoutTrashed(),
+            DateTime::make('Updated At')
+                ->format('MMM DD, GGGG hh:mm:ss A')
+                ->hideWhenUpdating()
+                ->hideWhenCreating(),
+            DateTime::make('Created At')
+                ->format('MMM DD, GGGG hh:mm:ss A')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
         ];
     }
 
