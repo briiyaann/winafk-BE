@@ -157,7 +157,11 @@ class MatchesController extends Controller
 
         foreach($match['match_teams'] as $match_team) {
             $mt = $this->team->show($match_team['team_id'])->toArray();
-            $odd = $this->submatch->getSingleOdds(1, $match['id'], $mt['id'])->toArray();
+            $submatch_id = 1;
+            if(count($match['match_submatch']) == 1) {
+                $submatch_id = $match['match_submatch'][0]['sub_match_id'];
+            }
+            $odd = $this->submatch->getSingleOdds($submatch_id, $match['id'], $mt['id'])->toArray();
 
             $mt['percentage'] = $odd['percentage'];
             array_push($teams, $mt);
@@ -198,7 +202,11 @@ class MatchesController extends Controller
 
             foreach($match['match_teams'] as $match_team) {
                 $mt = $this->team->show($match_team['team_id'])->toArray();
-                $odd = $this->submatch->getSingleOdds(1, $match['id'], $mt['id'])->toArray();
+                $submatch_id = 1;
+                if(count($match['match_submatch']) == 1) {
+                    $submatch_id = $match['match_submatch'][0]['sub_match_id'];
+                }
+                $odd = $this->submatch->getSingleOdds($submatch_id, $match['id'], $mt['id'])->toArray();
 
                 $mt['percentage'] = $odd['percentage'];
                 array_push($teams, $mt);
@@ -234,7 +242,11 @@ class MatchesController extends Controller
 
             foreach($match['match_teams'] as $match_team) {
                 $mt = $this->team->show($match_team['team_id'])->toArray();
-                $odd = $this->submatch->getSingleOdds(1, $match['id'], $mt['id'])->toArray();
+                $submatch_id = 1;
+                if(count($match['match_submatch']) == 1) {
+                    $submatch_id = $match['match_submatch'][0]['sub_match_id'];
+                }
+                $odd = $this->submatch->getSingleOdds($submatch_id, $match['id'], $mt['id'])->toArray();
 
                 $mt['percentage'] = $odd['percentage'];
                 array_push($teams, $mt);
@@ -802,10 +814,14 @@ class MatchesController extends Controller
 
         foreach($matches as $key => $match) {
             $results = $this->match->getMatchWinnerByMatch($match['id']);
-
-            foreach($match['match_submatch'] as $submatch) {
-                if($submatch['sub_match_id'] == 1) {
-                    $matches[$key]['team_winner'] = $submatch['team_winner'];
+            
+            if(count($match['match_submatch']) ==  1) {
+                $matches[$key]['team_winner'] = $match['match_submatch'][0]['team_winner'];
+            } else {
+                foreach($match['match_submatch'] as $submatch) {
+                    if($submatch['sub_match_id'] == 1) {
+                        $matches[$key]['team_winner'] = $submatch['team_winner'];
+                    }
                 }
             }
 
