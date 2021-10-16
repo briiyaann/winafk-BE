@@ -72,4 +72,38 @@ class UserSerivces
         return $this->user->checkRefenrence($reference);
     }
 
+    public function deductUser($user_id, $deduction): bool
+    {
+        $user = $this->findUser($user_id);
+
+        $deduction = (float) $user->coins - (float) $deduction;
+
+        if($deduction > 0) {
+            $update = [
+                'coins' => $deduction
+            ];
+
+            $this->updateUser($user->id, $update);
+
+            return true;
+        }
+
+        return false;
+
+    }
+
+    /**
+     * @param $user
+     * @param $coin
+     * @return mixed
+     */
+    public function returnCoin($user, $coin)
+    {
+        $currentCoin = $user->coins;
+
+        $addCoin = (float) $currentCoin + (float) $coin;
+
+        return $this->updateUser($user->id, ['coins' => $addCoin]);
+    }
+
 }

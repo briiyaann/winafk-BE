@@ -56,19 +56,24 @@ class WithdrawsController extends Controller
 
             return $this->common->returnWithErrors($return_err);
         } else {
+            $amount = request()->get('amount');
             $data = [
                 'user_id' => $request->get('user_id'),
-                'amount' => $request->get('amount'),
+                'amount' => $amount,
                 'phone' => $request->get('phone'),
                 'email' => $request->get('email'),
                 'status' => 'pending'
             ];
 
+            if((int) $amount < 500) {
+                return $this->common->createErrorMsg('withdraw_error', 'Minimum withdrawal must be 500.');
+            }
 
-            $add = $this->withdraw->store($data);
-
-            if($add->id) {
+            if($this->user->deductUser(request()->get('user_id'), $amount)){
+                $this->withdraw->store($data);
                 return $this->common->returnSuccess();
+            } else {
+                return $this->common->createErrorMsg('withdraw_error', 'Insufficient balance');
             }
         }
     }
@@ -84,7 +89,7 @@ class WithdrawsController extends Controller
         return $this->common->returnSuccessWithData($withdraws);
     }
 
-    public function updateWithdraw(Request $request, $id)
+    public function updateWithdraw(Request $request, $id): array
     {
         $withdraw = $this->withdraw->getWithdraw($id);
         if(!$withdraw) return $this->common->createErrorMsg('api_arror', 'Withdrawal information not found');
@@ -113,7 +118,7 @@ class WithdrawsController extends Controller
                 $user_data = ['coins' => $updated_coins];
                 $this->user->updateUser($user->id , $user_data);
 
-                return $this->common->returnSuccess();
+
             }
         } else {
             if(!$request->get('reason')) return $this->common->createErrorMsg('api_error', 'Declining reason is required');
@@ -123,11 +128,11 @@ class WithdrawsController extends Controller
                 'reason' => $request->get('reason')
             ];
 
-            $update = $this->withdraw->update($data, $id);
+            $this->user->returnCoin($user, $withdraw->amount);
 
-            if($update) {
-                return $this->common->returnSuccess();
-            }
+            $this->withdraw->update($data, $id);
+
         }
+        return $this->common->returnSuccess();
     }
 }
