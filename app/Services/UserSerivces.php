@@ -78,7 +78,7 @@ class UserSerivces
 
         $deduction = (float) $user->coins - (float) $deduction;
 
-        if($deduction > 0) {
+        if($deduction >= 0) {
             $update = [
                 'coins' => $deduction
             ];
