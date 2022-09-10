@@ -10,7 +10,7 @@ class SubMatch extends Model
 
     public function matches()
     {
-        return $this->belongsTo('App\Models\Core\Match');
+        return $this->belongsTo('App\Models\Core\Game');
     }
 
     public function odds()

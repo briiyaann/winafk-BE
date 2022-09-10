@@ -5,7 +5,7 @@ namespace App\Models\Core;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Match extends Model
+class Game extends Model
 {
     protected $fillable = ['name', 'game_type_id', 'league_id', 'schedule', 'fee', 'match_count', 'label', 'status', 'status_label', 'current_round', 'end_round'];
 
@@ -34,7 +34,7 @@ class Match extends Model
     public function getTeamsAttribute()
     {
         $mt = DB::table('match_teams')
-            ->where('match_id', $this->id)
+            ->where('game_id', $this->id)
             ->get();
 
         $teams = [];

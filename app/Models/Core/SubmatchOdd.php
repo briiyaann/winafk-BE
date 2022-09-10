@@ -9,7 +9,7 @@ class SubmatchOdd extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['sub_match_id', 'match_id', 'team_id', 'bets', 'percentage', 'odds'];
+    protected $fillable = ['sub_match_id', 'game_id', 'team_id', 'bets', 'percentage', 'odds'];
 
     public function submatch()
     {

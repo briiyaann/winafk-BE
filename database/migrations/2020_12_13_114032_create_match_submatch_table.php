@@ -15,7 +15,7 @@ class CreateMatchSubmatchTable extends Migration
     {
         Schema::create('match_submatch', function (Blueprint $table) {
             $table->id();
-            $table->integer('match_id');
+            $table->integer('game_id');
             $table->integer('sub_match_id');
             $table->integer('round');
             $table->timestamps();

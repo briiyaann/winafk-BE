@@ -23,19 +23,19 @@ class BetRepository implements BetRepositoryInterface
 
     public function getBetsByMatch($match_id)
     {
-        return Bet::where('match_id', $match_id)->get();
+        return Bet::where('game_id', $match_id)->get();
     }
 
     public function getBetsByMatchSubmatch($match_id, $submatch_id)
     {
-        return Bet::where('match_id', $match_id)
+        return Bet::where('game_id', $match_id)
             ->where('sub_match_id', $submatch_id)
             ->get();
     }
 
     public function getBetsByMatchSubmatchTeam($match_id, $submatch_id, $team_id)
     {
-        return Bet::where('match_id', $match_id)
+        return Bet::where('game_id', $match_id)
             ->where('sub_match_id', $submatch_id)
             ->where('team_id', $team_id)
             ->get();
@@ -45,14 +45,14 @@ class BetRepository implements BetRepositoryInterface
     {
         return Bet::where('sub_match_id', $sub_match_id)
                 ->where('user_id', $user_id)
-                ->where('match_id', $match_id)
+                ->where('game_id', $match_id)
                 ->get();
     }
 
     public function getBettsByUserByMatch($user_id, $match_id)
     {
         return Bet::where('user_id', $user_id)
-                ->where('match_id', $match_id)
+                ->where('game_id', $match_id)
                 ->get();
     }
 
@@ -65,7 +65,7 @@ class BetRepository implements BetRepositoryInterface
     {
         return Bet::where('user_id', $user_id)
                 ->where('amount', '!=', 0)
-                ->groupBy('match_id')
-                ->get('match_id');
+                ->groupBy('game_id')
+                ->get('game_id');
     }
 }

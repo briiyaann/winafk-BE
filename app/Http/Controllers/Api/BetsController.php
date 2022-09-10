@@ -9,7 +9,7 @@ use App\Services\MatchServices;
 use App\Services\SubMatchServices;
 use App\Services\UserSerivces;
 use Illuminate\Http\Request;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class BetsController extends Controller
 {
@@ -74,7 +74,7 @@ class BetsController extends Controller
             //check if match existed
             $match_id = $request->get('match_id');
             $match = $this->match->getMatch($match_id);
-            if(!$match) return $this->common->createErrorMsg('no_match', 'Match does not exist.');
+            if(!$match) return $this->common->createErrorMsg('no_match', 'Game does not exist.');
 
             $submatches = $request->get('sub_match');
             $user_details = $this->user->findUser($request->get('user_id'));
@@ -95,7 +95,7 @@ class BetsController extends Controller
 
                 $sub_data = [
                     'user_id' => $request->get('user_id'),
-                    'match_id' => $request->get('match_id'),
+                    'game_id' => $request->get('match_id'),
                     'team_id' => $submatch['team_id'],
                     'sub_match_id' => $submatch['submatch'],
                     'amount' => $submatch['amount']

@@ -12,7 +12,7 @@ class Bet extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['user_id', 'match_id', 'team_id', 'amount', 'sub_match_id'];
+    protected $fillable = ['user_id', 'game_id', 'team_id', 'amount', 'sub_match_id'];
 
     protected $appends = ['odds'];
 
@@ -59,7 +59,7 @@ class Bet extends Model
     {
         return DB::table('submatch_odds')
             ->where('sub_match_id', $this->sub_match_id)
-            ->where('match_id', $this->match_id)
+            ->where('game_id', $this->match_id)
             ->where('team_id', $this->team_id)
             ->first();
     }

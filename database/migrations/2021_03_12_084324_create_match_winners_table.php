@@ -15,7 +15,7 @@ class CreateMatchWinnersTable extends Migration
     {
         Schema::create('match_winners', function (Blueprint $table) {
             $table->id();
-            $table->integer('match_id');
+            $table->integer('game_id');
             $table->integer('score');
             $table->integer('team_id');
             $table->timestamps();

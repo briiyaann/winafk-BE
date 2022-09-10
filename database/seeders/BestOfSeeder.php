@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 class BestOfSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeders.
      *
      * @return void
      */

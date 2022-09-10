@@ -20,6 +20,6 @@ class League extends Model
 
     public function matches()
     {
-        return $this->hasMany('App\Models\Core\Match');
+        return $this->hasMany('App\Models\Core\Game');
     }
 }

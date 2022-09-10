@@ -32,14 +32,14 @@ class SubMatchRepository implements SubMatchRepositoryInterface
     public function getOddsByTeam($submatch_id, $match_id)
     {
         return SubmatchOdd::where('sub_match_id', $submatch_id)
-                ->where('match_id', $match_id)
+                ->where('game_id', $match_id)
                 ->get();
     }
 
     public function getSingleOdds($sub_match_id, $match_id, $team_id)
     {
         return SubmatchOdd::where('sub_match_id', $sub_match_id)
-            ->where('match_id', $match_id)
+            ->where('game_id', $match_id)
             ->where('team_id', $team_id)
             ->first();
     }

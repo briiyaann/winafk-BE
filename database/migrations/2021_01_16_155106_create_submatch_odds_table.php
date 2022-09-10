@@ -16,7 +16,7 @@ class CreateSubmatchOddsTable extends Migration
         Schema::create('submatch_odds', function (Blueprint $table) {
             $table->id();
             $table->integer('sub_match_id');
-            $table->integer('match_id');
+            $table->integer('game_id');
             $table->integer('team_id');
             $table->decimal('bets', 11, 2)->default(0);
             $table->decimal('percentage', 5, 2);

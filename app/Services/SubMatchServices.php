@@ -42,8 +42,8 @@ class SubMatchServices
 
     public function calculateOdds($data)
     {
-        $submatch_odds = $this->sub_match->getOddsByTeam($data['sub_match_id'], $data['match_id'])->toArray();
-        $match = $this->match->getMatch($data['match_id']);
+        $submatch_odds = $this->sub_match->getOddsByTeam($data['sub_match_id'], $data['game_id'])->toArray();
+        $match = $this->match->getMatch($data['game_id']);
         $match_fee = round(1 - $match->fee/100, 2);
 
         if(count($submatch_odds) == 2)
